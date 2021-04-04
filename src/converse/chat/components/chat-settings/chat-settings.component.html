@@ -1,31 +1,33 @@
 <div class="chat-settings">
 	<mat-card>
 		<div class="chat-settings__header">Settings</div>
-		<hr class="separator" />
+		<hr class="chat-settings__separator" />
 		<mat-card-content>
 			<div
 				*ngIf="
 					!(isAddOrDeleteChatProgress | async);
 					else loadingProfileImageTemplate
 				"
-				class="chat-settings__profile-image"
+				class="chat-settings__profile-image-block"
 			>
 				<img
 					*ngIf="
 						!!loggedInUser.profileImagePath;
 						else fileInputTemplate
 					"
-					class="profile-image"
+					class="chat-settings__profile-image"
 					[src]="loggedInUser.profileImagePath"
 					(click)="deleteProfileImage($event)"
 				/>
 
 				<div
-					class="delete-file"
+					class="chat-settings__delete-file"
 					*ngIf="!!loggedInUser.profileImagePath"
 					(click)="deleteProfileImage($event)"
 				>
-					<div class="text"><mat-icon>delete</mat-icon></div>
+					<div class="chat-settings__text">
+						<mat-icon>delete</mat-icon>
+					</div>
 				</div>
 			</div>
 			<div class="chat-settings__profile-details">
@@ -43,13 +45,16 @@
 </div>
 
 <ng-template #fileInputTemplate>
-	<div class="image-upload">
+	<div class="chat-settings__image-upload">
 		<label for="file-input">
-			<img class="file-input-image" [src]="defaultProfileImagePath" />
+			<img
+				class="chat-settings__file-input-image"
+				[src]="defaultProfileImagePath"
+			/>
 		</label>
 
-		<div class="upload-file">
-			<div class="text"><mat-icon>upload</mat-icon></div>
+		<div class="chat-settings__upload-file">
+			<div class="chat-settings__text"><mat-icon>upload</mat-icon></div>
 		</div>
 
 		<input

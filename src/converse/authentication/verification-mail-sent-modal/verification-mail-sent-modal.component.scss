@@ -1,8 +1,10 @@
-.modal-message {
-	margin: 1em;
-}
+.modal {
+	&-message {
+		margin: 1em;
+	}
 
-.modal-actions {
-	display: flex;
-	justify-content: flex-end;
+	&-actions {
+		display: flex;
+		justify-content: flex-end;
+	}
 }

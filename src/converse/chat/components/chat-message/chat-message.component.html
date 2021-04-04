@@ -4,7 +4,7 @@
 		class="chat-message__outgoing"
 	>
 		<img
-			class="profile-image"
+			class="chat-message__profile-image"
 			[src]="(profileImagePath | async) || defaultProfileImagePath"
 		/>
 		<div class="message">
@@ -19,7 +19,10 @@
 
 <ng-template #incoming>
 	<div class="chat-message__incoming">
-		<img class="profile-image" [src]="profileImagePath | async" />
+		<img
+			class="chat-message__profile-image"
+			[src]="profileImagePath | async"
+		/>
 		<div class="message">
 			<div class="message-sender">
 				{{ selectedSenderNameSource | async }}

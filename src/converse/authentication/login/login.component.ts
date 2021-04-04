@@ -1,3 +1,4 @@
+import { Subscription } from 'rxjs';
 import {
 	googleLoginProgress, googleLoginStart, loginProgress, loginStart
 } from '../store/actions/actions';
@@ -5,7 +6,9 @@ import {
 	isLoggingInProcessProgress, isLoggingInProgress, isLoginFailure,
 	isLoginSuccess
 } from '../store/selectors/selectors';
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import {
+	Component, EventEmitter, OnDestroy, OnInit, Output
+} from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
@@ -15,12 +18,16 @@ import { Store } from '@ngrx/store';
 	templateUrl: './login.component.html',
 	styleUrls: ['./login.component.scss']
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent implements OnInit, OnDestroy {
 	@Output() public tabChange: EventEmitter<void> = new EventEmitter();
 	public loginForm: FormGroup;
 	public isLoginButtonDisabled: boolean;
 	public isLoginProgress: boolean;
 	public formError: string;
+	private loginSuccessSubscription: Subscription;
+	private loginFailureSubscription: Subscription;
+	private loggingInProgressSubscription: Subscription;
+	private loggingInProcessProgressSubscription: Subscription;
 
 	constructor(private store: Store, private router: Router) {
 		this.loginForm = new FormGroup({
@@ -37,9 +44,9 @@ export class LoginComponent implements OnInit {
 	}
 
 	private initializeLoggingInProcessProgressSubscription(): void {
-		this.store
+		this.loggingInProcessProgressSubscription = this.store
 			.select(isLoggingInProcessProgress)
-			.subscribe(({ isLoginProcessProgress }) => {
+			.subscribe((isLoginProcessProgress: boolean) => {
 				if (isLoginProcessProgress) {
 					this.loginForm.controls.email.disable();
 					this.loginForm.controls.password.disable();
@@ -52,32 +59,36 @@ export class LoginComponent implements OnInit {
 	}
 
 	private initializeLoggingInProgressSubscription(): void {
-		this.store
+		this.loggingInProgressSubscription = this.store
 			.select(isLoggingInProgress)
-			.subscribe(({ isLoginProgress }) => {
+			.subscribe((isLoginProgress: boolean) => {
 				this.isLoginProgress = isLoginProgress;
 			});
 	}
 
 	private initializeLoginFailureSubscription(): void {
-		this.store.select(isLoginFailure).subscribe(({ loginError }) => {
-			if (loginError === 'email-not-verified') {
-				this.formError = '*Please verify your email';
-			} else if (
-				loginError ===
-				'The password is invalid or the user does not have a password.'
-			) {
-				this.formError = 'Invalid email or password';
-			}
-		});
+		this.loginFailureSubscription = this.store
+			.select(isLoginFailure)
+			.subscribe((loginError: string) => {
+				if (loginError === 'email-not-verified') {
+					this.formError = '*Please verify your email';
+				} else if (
+					loginError ===
+					'The password is invalid or the user does not have a password.'
+				) {
+					this.formError = 'Invalid email or password';
+				}
+			});
 	}
 
 	private initializeLoginSuccessSubscription(): void {
-		this.store.select(isLoginSuccess).subscribe(({ isLoginSuccess }) => {
-			if (isLoginSuccess) {
-				this.router.navigate(['chat']);
-			}
-		});
+		this.loginSuccessSubscription = this.store
+			.select(isLoginSuccess)
+			.subscribe((isLoginSuccessStatus: boolean) => {
+				if (isLoginSuccessStatus) {
+					this.router.navigate(['chat']);
+				}
+			});
 	}
 
 	public login(event: Event): void {
@@ -99,5 +110,12 @@ export class LoginComponent implements OnInit {
 
 	public openRegisterTab(): void {
 		this.tabChange.emit();
+	}
+
+	public ngOnDestroy(): void {
+		this.loggingInProcessProgressSubscription.unsubscribe();
+		this.loggingInProgressSubscription.unsubscribe();
+		this.loginFailureSubscription.unsubscribe();
+		this.loginSuccessSubscription.unsubscribe();
 	}
 }

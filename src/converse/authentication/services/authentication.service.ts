@@ -1,6 +1,7 @@
 import firebase from 'firebase/app';
 import { from, Observable, of } from 'rxjs';
 import { map, mergeMap } from 'rxjs/operators';
+import { CONTACT_COLLECTION } from 'src/converse/contacts/contact-constants';
 import { User } from '../auth-types';
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
@@ -22,10 +23,16 @@ export class AuthenticationService {
 		).pipe(
 			mergeMap((userCredentials: firebase.auth.UserCredential) => {
 				return this.angularFirestore
-					.collection<{ profileImagePath }>('contact', (ref) =>
-						ref
-							.where('email', '==', userCredentials.user.email)
-							.limit(1)
+					.collection<{ profileImagePath }>(
+						CONTACT_COLLECTION,
+						(ref) =>
+							ref
+								.where(
+									'email',
+									'==',
+									userCredentials.user.email
+								)
+								.limit(1)
 					)
 					.valueChanges()
 					.pipe(
@@ -72,10 +79,16 @@ export class AuthenticationService {
 		return from(this.loginWithGoogleGuarded()).pipe(
 			mergeMap((userCredentials: firebase.auth.UserCredential) => {
 				return this.angularFirestore
-					.collection<{ profileImagePath }>('contact', (ref) =>
-						ref
-							.where('email', '==', userCredentials.user.email)
-							.limit(1)
+					.collection<{ profileImagePath }>(
+						CONTACT_COLLECTION,
+						(ref) =>
+							ref
+								.where(
+									'email',
+									'==',
+									userCredentials.user.email
+								)
+								.limit(1)
 					)
 					.valueChanges()
 					.pipe(
@@ -138,7 +151,7 @@ export class AuthenticationService {
 						};
 						return this.angularFirestore
 							.collection<{ profileImagePath }>(
-								'contact',
+								CONTACT_COLLECTION,
 								(ref) =>
 									ref
 										.where('email', '==', userEntity.email)

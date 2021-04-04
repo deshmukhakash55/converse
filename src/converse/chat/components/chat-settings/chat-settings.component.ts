@@ -1,4 +1,4 @@
-import { combineLatest, Observable } from 'rxjs';
+import { combineLatest, Observable, Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { User } from 'src/converse/authentication/auth-types';
 import {
@@ -12,7 +12,7 @@ import {
 import {
 	isAddProfileImageProgress, isDeleteProfileImageProgress
 } from '../../store/selectors/selectors';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 
 @Component({
@@ -20,18 +20,24 @@ import { Store } from '@ngrx/store';
 	templateUrl: './chat-settings.component.html',
 	styleUrls: ['./chat-settings.component.scss']
 })
-export class ChatSettingsComponent implements OnInit {
+export class ChatSettingsComponent implements OnInit, OnDestroy {
 	public loggedInUser: User;
 	public newImageFile: any;
 	public defaultProfileImagePath = defaultProfileImagePath;
 	public isAddOrDeleteChatProgress: Observable<boolean>;
+	private loggedInUserSubscription: Subscription;
+
 	constructor(private store: Store) {}
 
 	public ngOnInit(): void {
-		this.store
+		this.initializeLoggedInUserSubscription();
+		this.initializeIsAddOrDeleteChatProgress();
+	}
+
+	private initializeLoggedInUserSubscription(): void {
+		this.loggedInUserSubscription = this.store
 			.select(loggedInUser)
 			.subscribe((user: User) => (this.loggedInUser = user));
-		this.initializeIsAddOrDeleteChatProgress();
 	}
 
 	private initializeIsAddOrDeleteChatProgress(): void {
@@ -70,5 +76,9 @@ export class ChatSettingsComponent implements OnInit {
 				profileImagePath: this.loggedInUser.profileImagePath
 			})
 		);
+	}
+
+	public ngOnDestroy(): void {
+		this.loggedInUserSubscription.unsubscribe();
 	}
 }

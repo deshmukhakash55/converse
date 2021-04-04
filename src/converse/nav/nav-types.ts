@@ -1,4 +1,4 @@
-import { Contact } from '../contacts/store/payload-types';
+import { Contact } from '../contacts/contact-types';
 
 export type NavStoreState = {
 	searchContacts: Contact[];

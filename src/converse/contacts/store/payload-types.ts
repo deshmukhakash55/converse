@@ -1,14 +1,5 @@
 import { SearchContact } from 'src/converse/nav/nav-types';
-
-export type Contact = {
-	name: string;
-	email: string;
-	chatType: string;
-	profileImagePath: string;
-	latestMessage: string;
-	latestContactDate: Date;
-	blockChatId: string;
-};
+import { Contact } from '../contact-types';
 
 export type LoadedContactsStartPayload = {
 	loggedInEmail: string;

@@ -1,13 +1,13 @@
 import { from } from 'rxjs';
-import { catchError, first, map, mergeMap } from 'rxjs/operators';
+import { catchError, map, mergeMap } from 'rxjs/operators';
 import { LOAD_CHAT_START } from '../../../chat/store/actions/action-types';
+import { Contact } from '../../contact-types';
 import * as actionTypes from '../actions/action-types';
 import {
 	blockContactEnd, blockContactFailure, loadContactsEnd, loadContactsFailure,
 	loadSingleContactEnd, loadSingleContactFailure, unblockContactEnd,
 	unblockContactFailure
 } from '../actions/actions';
-import { Contact } from '../payload-types';
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { ContactBlockService } from '../../services/contact-block.service';
@@ -53,12 +53,10 @@ export class ContactEffects {
 		this.actions.pipe(
 			ofType(actionTypes.LOAD_SINGLE_CONTACT_START),
 			mergeMap(({ searchContact, loggedInEmail }) =>
-				this.singleContactLoaderService
-					.loadSingleContactDetailsFor(searchContact, loggedInEmail)
-					.pipe(
-						first(),
-						map((contact: Contact) => ({ contact, loggedInEmail }))
-					)
+				this.singleContactLoaderService.loadSingleContactDetailsFor(
+					searchContact,
+					loggedInEmail
+				)
 			),
 			mergeMap(({ contact, loggedInEmail }) => [
 				{
@@ -87,9 +85,7 @@ export class ContactEffects {
 		this.actions.pipe(
 			ofType(actionTypes.BLOCK_CONTACT_START),
 			mergeMap(({ loggedInEmail, email }) =>
-				this.contactBlockService
-					.blockContact(email, loggedInEmail)
-					.pipe(map((response: any) => loggedInEmail))
+				this.contactBlockService.blockContact(email, loggedInEmail)
 			),
 			mergeMap((loggedInEmail: string) => [
 				{
@@ -118,7 +114,7 @@ export class ContactEffects {
 			mergeMap(({ blockChatId, loggedInEmail }) =>
 				this.contactBlockService
 					.unblockContact(blockChatId)
-					.pipe(map((response: any) => loggedInEmail))
+					.pipe(map((_: any) => loggedInEmail))
 			),
 			mergeMap((loggedInEmail: string) => [
 				{

@@ -1,12 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 
 @Component({
 	selector: 'chat-messages-window',
-	templateUrl: './chat-messages-window.component.html',
-	styleUrls: ['./chat-messages-window.component.scss']
+	template: '<chat-messages></chat-messages>'
 })
-export class ChatMessagesWindowComponent implements OnInit {
-	constructor() {}
-
-	ngOnInit(): void {}
-}
+export class ChatMessagesWindowComponent {}

@@ -1,5 +1,6 @@
 import firebase from 'firebase/app';
 import { Observable, of } from 'rxjs';
+import { CHAT_COLLECTION } from 'src/converse/contacts/contact-constants';
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 
@@ -13,7 +14,7 @@ export class ChatSaverService {
 		message: string
 	): Observable<any> {
 		return of(
-			this.angularFirestore.collection('chat').add({
+			this.angularFirestore.collection(CHAT_COLLECTION).add({
 				from,
 				to,
 				message,

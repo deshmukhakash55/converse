@@ -4,8 +4,7 @@ import { Store } from '@ngrx/store';
 
 @Component({
 	selector: 'converse',
-	templateUrl: './converse.component.html',
-	styleUrls: ['./converse.component.scss']
+	template: '<router-outlet></router-outlet>'
 })
 export class ConverseComponent implements OnInit {
 	constructor(private store: Store) {}

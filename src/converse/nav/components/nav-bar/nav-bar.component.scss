@@ -15,17 +15,17 @@
 	&__contact-search {
 		width: 50%;
 	}
-}
 
-.logo-image {
-	height: 40px;
-	width: 40px;
-}
+	&__logo {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		gap: 0.5em;
+		padding-left: 0.5em;
 
-.logo {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	gap: 0.5em;
-	padding-left: 0.5em;
+		&-image {
+			height: 40px;
+			width: 40px;
+		}
+	}
 }

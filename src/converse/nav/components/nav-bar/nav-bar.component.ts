@@ -1,4 +1,4 @@
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { Chat } from 'src/converse/chat/chat-types';
 import {
 	chats, loggedInUserProfileImagePath
@@ -8,7 +8,7 @@ import { logOut } from '../../../authentication/store/actions/actions';
 import {
 	isLogoutSuccess
 } from '../../../authentication/store/selectors/selectors';
-import { Component, DoCheck, OnInit } from '@angular/core';
+import { Component, DoCheck, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 
@@ -17,12 +17,15 @@ import { Store } from '@ngrx/store';
 	templateUrl: './nav-bar.component.html',
 	styleUrls: ['./nav-bar.component.scss']
 })
-export class NavBarComponent implements OnInit, DoCheck {
+export class NavBarComponent implements OnInit, DoCheck, OnDestroy {
 	public profilePictureSource: Observable<string>;
 	public shouldShowSettingsMenuOption: boolean;
 	public shouldShowHomeMenuOption: boolean;
 	public shouldShowNavSearchInput: boolean;
 	public defaultProfileImagePath = defaultProfileImagePath;
+	private shouldShowNavSearchInputSubscription: Subscription;
+	private logoutSubscription: Subscription;
+
 	constructor(private store: Store, private router: Router) {}
 
 	public ngOnInit(): void {
@@ -30,29 +33,34 @@ export class NavBarComponent implements OnInit, DoCheck {
 		this.loadLoggedInUserProfileImagePath();
 	}
 
+	private initializeLogoutSubscription(): void {
+		this.logoutSubscription = this.store
+			.select(isLogoutSuccess)
+			.subscribe((isLogoutSuccessStatus: boolean) => {
+				if (isLogoutSuccessStatus) {
+					this.router.navigate(['landing']);
+				}
+			});
+	}
+
 	public ngDoCheck(): void {
+		this.initializeMenuOptions();
+		this.initializeShouldShowNavSearchInputSubscription();
+	}
+
+	private initializeMenuOptions(): void {
 		this.shouldShowSettingsMenuOption = this.router.url !== '/settings';
 		this.shouldShowHomeMenuOption = this.router.url !== '/chat';
-		this.initializeShouldShowNavSearchInput();
 	}
 
-	private initializeShouldShowNavSearchInput(): void {
-		this.store
+	private initializeShouldShowNavSearchInputSubscription(): void {
+		this.shouldShowNavSearchInputSubscription = this.store
 			.select(chats)
 			.subscribe(
-				(chatsData: { chats: Chat[] }) =>
+				(chatList: Chat[]) =>
 					(this.shouldShowNavSearchInput =
-						chatsData.chats.length > 0 &&
-						this.router.url === '/chat')
+						chatList.length > 0 && this.router.url === '/chat')
 			);
-	}
-
-	private initializeLogoutSubscription(): void {
-		this.store.select(isLogoutSuccess).subscribe(({ isLogoutSuccess }) => {
-			if (isLogoutSuccess) {
-				this.router.navigate(['landing']);
-			}
-		});
 	}
 
 	private loadLoggedInUserProfileImagePath(): void {
@@ -73,5 +81,10 @@ export class NavBarComponent implements OnInit, DoCheck {
 	public openChatDashboard(event: Event): void {
 		event.preventDefault();
 		this.router.navigate(['chat']);
+	}
+
+	public ngOnDestroy(): void {
+		this.shouldShowNavSearchInputSubscription.unsubscribe();
+		this.logoutSubscription.unsubscribe();
 	}
 }

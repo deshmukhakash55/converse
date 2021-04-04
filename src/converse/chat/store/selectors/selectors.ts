@@ -1,8 +1,9 @@
 import { AuthStoreKey } from 'src/converse/authentication/auth-constants';
 import { AuthStoreState } from 'src/converse/authentication/auth-types';
 import { ContactStoreKey } from 'src/converse/contacts/contact-constants';
-import { ContactStoreState } from 'src/converse/contacts/contact-types';
-import { Contact } from 'src/converse/contacts/store/payload-types';
+import {
+	Contact, ContactStoreState
+} from 'src/converse/contacts/contact-types';
 import { ChatStoreKey } from '../../chat-constants';
 import { ChatStoreState } from '../../chat-types';
 import { createSelector } from '@ngrx/store';
@@ -13,30 +14,22 @@ const authStateSelector = (state) => state[AuthStoreKey];
 
 export const chats = createSelector(
 	chatStateSelector,
-	(state: ChatStoreState) => ({
-		chats: state.chats
-	})
+	(state: ChatStoreState) => state.chats
 );
 
 export const selectedSender = createSelector(
 	chatStateSelector,
-	(state: ChatStoreState) => ({
-		selectedSender: state.selectedSender
-	})
+	(state: ChatStoreState) => state.selectedSender
 );
 
 export const isSendMessageSuccess = createSelector(
 	chatStateSelector,
-	(state: ChatStoreState) => ({
-		isSendMessageSuccess: state.isSendMessageSuccess
-	})
+	(state: ChatStoreState) => state.isSendMessageSuccess
 );
 
 export const isSendMessageProgress = createSelector(
 	chatStateSelector,
-	(state: ChatStoreState) => ({
-		isSendMessageProgress: state.isSendMessageProgress
-	})
+	(state: ChatStoreState) => state.isSendMessageProgress
 );
 
 export const contactProfileImagePath = createSelector(

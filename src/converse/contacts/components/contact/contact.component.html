@@ -1,7 +1,10 @@
 <div class="contact">
 	<div class="contact__name-and-profile">
 		<div class="contact__details" (click)="openContactChat(contact.email)">
-			<img class="profile-image" [src]="contact.profileImagePath" />
+			<img
+				class="contact__profile-image"
+				[src]="contact.profileImagePath"
+			/>
 			<div>{{ contact.name }}</div>
 			<div
 				class="contact__block"

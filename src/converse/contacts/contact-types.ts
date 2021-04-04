@@ -1,5 +1,3 @@
-import { Contact } from './store/payload-types';
-
 export type ContactStoreState = {
 	contacts: Contact[];
 	loadFailReason: string;
@@ -16,4 +14,14 @@ export type ContactStoreState = {
 	isUnblockContactProgress: boolean;
 	isUnblockContactSuccess: boolean;
 	unblockContactFailureReason: string;
+};
+
+export type Contact = {
+	name: string;
+	email: string;
+	chatType: string;
+	profileImagePath: string;
+	latestMessage: string;
+	latestContactDate: Date;
+	blockChatId: string;
 };

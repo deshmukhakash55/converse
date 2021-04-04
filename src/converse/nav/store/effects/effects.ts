@@ -10,8 +10,8 @@ import { ContactSearchService } from '../../services/contact-search.service';
 @Injectable()
 export class NavEffects {
 	constructor(
-		private contactSearchService: ContactSearchService,
-		private actions: Actions
+		private actions: Actions,
+		private contactSearchService: ContactSearchService
 	) {}
 
 	public searchContactsStart = createEffect(() =>

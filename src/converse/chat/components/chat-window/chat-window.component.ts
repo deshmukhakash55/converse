@@ -1,5 +1,5 @@
 import { combineLatest, Observable, of } from 'rxjs';
-import { map, mergeMap } from 'rxjs/operators';
+import { mergeMap } from 'rxjs/operators';
 import { Chat } from '../../chat-types';
 import {
 	chats, isLoadChatProgress, selectedSender
@@ -21,19 +21,22 @@ export class ChatWindowComponent implements OnInit {
 	constructor(private store: Store) {}
 
 	public ngOnInit(): void {
-		this.loadChatProgressSource = this.store.select(isLoadChatProgress);
-		this.chatsSource = this.store
-			.select(chats)
-			.pipe(map(({ chats }: { chats: Chat[] }) => [...chats]));
-		this.selectedSenderSource = this.store
-			.select(selectedSender)
-			.pipe(
-				map(
-					(selectedSenderData: { selectedSender: string }) =>
-						selectedSenderData.selectedSender
-				)
-			);
+		this.initializeLoadChatProgressSource();
+		this.initializeChatsSource();
+		this.initializeSelectedSenderSource();
 		this.initializeLoaderObservable();
+	}
+
+	private initializeLoadChatProgressSource(): void {
+		this.loadChatProgressSource = this.store.select(isLoadChatProgress);
+	}
+
+	private initializeChatsSource(): void {
+		this.chatsSource = this.store.select(chats);
+	}
+
+	private initializeSelectedSenderSource(): void {
+		this.selectedSenderSource = this.store.select(selectedSender);
 	}
 
 	private initializeLoaderObservable(): void {

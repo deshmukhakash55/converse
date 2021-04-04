@@ -1,4 +1,4 @@
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import { User } from 'src/converse/authentication/auth-types';
 import {
@@ -7,7 +7,9 @@ import {
 import { Chat, ChatType } from '../../chat-types';
 import { chats, isSendMessageSuccess } from '../../store/selectors/selectors';
 import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import {
+	AfterViewInit, Component, OnDestroy, OnInit, ViewChild
+} from '@angular/core';
 import { Store } from '@ngrx/store';
 
 @Component({
@@ -15,35 +17,40 @@ import { Store } from '@ngrx/store';
 	templateUrl: './chat-messages.component.html',
 	styleUrls: ['./chat-messages.component.scss']
 })
-export class ChatMessagesComponent implements OnInit, AfterViewInit {
+export class ChatMessagesComponent implements OnInit, AfterViewInit, OnDestroy {
 	@ViewChild('virtualScroll', { static: true })
 	public virtualScrollViewport: CdkVirtualScrollViewport;
 	public chatsSource: Observable<Chat[]>;
 	public loggedInUser: User;
+	private loggedInUserAndChatsSourceSubscription: Subscription;
+	private sendMessageSuccessSubscription: Subscription;
+
 	constructor(private store: Store) {}
 
 	public ngOnInit(): void {
-		this.initializeLoggedInUserAndChatsSource();
-		this.initializeSendMessageSuccessListener();
+		this.initializeLoggedInUserAndChatsSourceSubscription();
+		this.initializeSendMessageSuccessSubscription();
 	}
 
-	private initializeLoggedInUserAndChatsSource(): void {
-		this.store.select(loggedInUser).subscribe((user: User) => {
-			if (user) {
-				this.loggedInUser = user;
-				this.chatsSource = this.store.select(chats).pipe(
-					map((chatsData: { chats: Chat[] }) => [...chatsData.chats]),
-					tap(() => this.scrollMessagesWindowToBottom())
-				);
-			}
-		});
+	private initializeLoggedInUserAndChatsSourceSubscription(): void {
+		this.loggedInUserAndChatsSourceSubscription = this.store
+			.select(loggedInUser)
+			.subscribe((user: User) => {
+				if (user) {
+					this.loggedInUser = user;
+					this.chatsSource = this.store.select(chats).pipe(
+						map((chatList: Chat[]) => [...chatList]),
+						tap(() => this.scrollMessagesWindowToBottom())
+					);
+				}
+			});
 	}
 
-	private initializeSendMessageSuccessListener(): void {
-		this.store
+	private initializeSendMessageSuccessSubscription(): void {
+		this.sendMessageSuccessSubscription = this.store
 			.select(isSendMessageSuccess)
-			.subscribe((successData: { isSendMessageSuccess: boolean }) => {
-				if (successData.isSendMessageSuccess) {
+			.subscribe((isSendMessageSuccessStatus: boolean) => {
+				if (isSendMessageSuccessStatus) {
 					this.scrollMessagesWindowToBottom();
 				}
 			});
@@ -69,5 +76,10 @@ export class ChatMessagesComponent implements OnInit, AfterViewInit {
 			return 'outgoing';
 		}
 		return 'incoming';
+	}
+
+	public ngOnDestroy(): void {
+		this.loggedInUserAndChatsSourceSubscription.unsubscribe();
+		this.sendMessageSuccessSubscription.unsubscribe();
 	}
 }

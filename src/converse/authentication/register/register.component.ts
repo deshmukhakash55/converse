@@ -1,3 +1,4 @@
+import { Subscription } from 'rxjs';
 import { LandingErrorStateMatcher } from '../classes/LandingErrorStateMatcher';
 import {
 	googleLoginProgress, googleLoginStart, registerProgress, registerStart
@@ -6,7 +7,9 @@ import {
 	isRegisterFailure, isRegisterProcessProgress, isRegisterProgress,
 	isRegisterSuccess
 } from '../store/selectors/selectors';
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import {
+	Component, EventEmitter, OnDestroy, OnInit, Output
+} from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { Store } from '@ngrx/store';
@@ -19,7 +22,7 @@ import {
 	templateUrl: './register.component.html',
 	styleUrls: ['./register.component.scss']
 })
-export class RegisterComponent implements OnInit {
+export class RegisterComponent implements OnInit, OnDestroy {
 	@Output() public tabChange: EventEmitter<void> = new EventEmitter();
 	public isSignupButtonDisabled: boolean;
 	public isRegisterProgress: boolean;
@@ -27,6 +30,11 @@ export class RegisterComponent implements OnInit {
 	public signupForm: FormGroup;
 	private verificationMailSentDialogRef: MatDialogRef<VerificationMailSentModalComponent>;
 	public landingErrorStateMatcher: LandingErrorStateMatcher = new LandingErrorStateMatcher();
+	private confirmedPasswordFormControlSubscription: Subscription;
+	private registerProcessProgressSubscription: Subscription;
+	private registerProgressSubscription: Subscription;
+	private registerFailureSubscription: Subscription;
+	private registerSuccessSubscription: Subscription;
 
 	constructor(private store: Store, private matDialog: MatDialog) {
 		this.signupForm = new FormGroup({
@@ -67,23 +75,26 @@ export class RegisterComponent implements OnInit {
 	private initializeConfirmPasswordMatcherValidator(): void {
 		const confirmedPasswordFormControl = this.signupForm.controls
 			.confirmedPassword;
-		confirmedPasswordFormControl.valueChanges.subscribe((value: string) => {
-			if (value !== this.signupForm.controls.password.value) {
-				confirmedPasswordFormControl.setErrors(
-					{
-						mismatch: 'Password and Confirm password do not match'
-					},
-					{ emitEvent: true }
-				);
+		this.confirmedPasswordFormControlSubscription = confirmedPasswordFormControl.valueChanges.subscribe(
+			(value: string) => {
+				if (value !== this.signupForm.controls.password.value) {
+					confirmedPasswordFormControl.setErrors(
+						{
+							mismatch:
+								'Password and Confirm password do not match'
+						},
+						{ emitEvent: true }
+					);
+				}
 			}
-		});
+		);
 	}
 
 	private initializeRegisterProcessProgressSubscription(): void {
-		this.store
+		this.registerProcessProgressSubscription = this.store
 			.select(isRegisterProcessProgress)
-			.subscribe((state: { isRegisterProcessProgress: boolean }) => {
-				if (state.isRegisterProcessProgress) {
+			.subscribe((isRegisterProcessProgressStatus: boolean) => {
+				if (isRegisterProcessProgressStatus) {
 					this.signupForm.controls.name.disable();
 					this.signupForm.controls.email.disable();
 					this.signupForm.controls.password.disable();
@@ -94,35 +105,37 @@ export class RegisterComponent implements OnInit {
 					this.signupForm.controls.password.enable();
 					this.signupForm.controls.confirmedPassword.enable();
 				}
-				this.isSignupButtonDisabled = state.isRegisterProcessProgress;
+				this.isSignupButtonDisabled = isRegisterProcessProgressStatus;
 			});
 	}
 
 	private initializeRegisterProgressSubscription(): void {
-		this.store
+		this.registerProgressSubscription = this.store
 			.select(isRegisterProgress)
-			.subscribe((state: { isRegisterProgress: boolean }) => {
-				this.isRegisterProgress = state.isRegisterProgress;
+			.subscribe((isRegisterProgressStatus: boolean) => {
+				this.isRegisterProgress = isRegisterProgressStatus;
 			});
 	}
 
 	private initializeRegisterFailureSubscription(): void {
-		this.store.select(isRegisterFailure).subscribe(({ registerError }) => {
-			if (
-				registerError ===
-				'The email address is already in use by another account.'
-			) {
-				this.formError = '*Account already exists. Try logging in.';
-			}
-		});
+		this.registerFailureSubscription = this.store
+			.select(isRegisterFailure)
+			.subscribe((registerError: string) => {
+				if (
+					registerError ===
+					'The email address is already in use by another account.'
+				) {
+					this.formError = '*Account already exists. Try logging in.';
+				}
+			});
 	}
 
 	private initializeRegisterSuccessSubscription(): void {
-		this.store
+		this.registerSuccessSubscription = this.store
 			.select(isRegisterSuccess)
-			.subscribe(({ isRegisterSuccess }) => {
+			.subscribe((isRegisterSuccessStatus: boolean) => {
 				if (
-					!isRegisterSuccess ||
+					!isRegisterSuccessStatus ||
 					!!this.verificationMailSentDialogRef
 				) {
 					return;
@@ -147,5 +160,13 @@ export class RegisterComponent implements OnInit {
 		event.preventDefault();
 		this.store.dispatch(googleLoginStart());
 		this.store.dispatch(googleLoginProgress());
+	}
+
+	public ngOnDestroy(): void {
+		this.confirmedPasswordFormControlSubscription.unsubscribe();
+		this.registerProcessProgressSubscription.unsubscribe();
+		this.registerProgressSubscription.unsubscribe();
+		this.registerFailureSubscription.unsubscribe();
+		this.registerSuccessSubscription.unsubscribe();
 	}
 }

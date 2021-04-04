@@ -1,3 +1,4 @@
+import { Subscription } from 'rxjs';
 import { User } from 'src/converse/authentication/auth-types';
 import {
 	loggedInUser
@@ -5,12 +6,12 @@ import {
 import {
 	loadChatProgress, loadChatStart
 } from 'src/converse/chat/store/actions/actions';
+import { Contact } from '../../contact-types';
 import {
 	blockContactProgress, blockContactStart, unblockContactProgress,
 	unblockContactStart
 } from '../../store/actions/actions';
-import { Contact } from '../../store/payload-types';
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatMenuTrigger } from '@angular/material/menu';
 import { Store } from '@ngrx/store';
 
@@ -19,10 +20,11 @@ import { Store } from '@ngrx/store';
 	templateUrl: './contact.component.html',
 	styleUrls: ['./contact.component.scss']
 })
-export class ContactComponent implements OnInit {
+export class ContactComponent implements OnInit, OnDestroy {
 	@Input() public contact: Contact;
-	private loggedInEmail: string;
 	@ViewChild(MatMenuTrigger) public matMenuTrigger: MatMenuTrigger;
+	private loggedInEmail: string;
+	private loggedInEmailSubscription: Subscription;
 
 	constructor(private store: Store) {}
 
@@ -31,7 +33,7 @@ export class ContactComponent implements OnInit {
 	}
 
 	private initializeLoggedInEmailSubscription(): void {
-		this.store
+		this.loggedInEmailSubscription = this.store
 			.select(loggedInUser)
 			.subscribe((user: User) => (this.loggedInEmail = user.email));
 	}
@@ -83,5 +85,9 @@ export class ContactComponent implements OnInit {
 				);
 				this.store.dispatch(loadChatProgress());
 			});
+	}
+
+	public ngOnDestroy(): void {
+		this.loggedInEmailSubscription.unsubscribe();
 	}
 }

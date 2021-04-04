@@ -53,10 +53,10 @@
 			text-align: end;
 		}
 	}
-}
 
-.profile-image {
-	width: 3em;
-	height: 3em;
-	border-radius: 50%;
+	&__profile-image {
+		width: 3em;
+		height: 3em;
+		border-radius: 50%;
+	}
 }

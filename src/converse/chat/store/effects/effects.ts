@@ -84,7 +84,7 @@ export class ChatEffects {
 					sendMessageStartPayload.message
 				)
 			),
-			mergeMap((res: any) => [
+			mergeMap((_: any) => [
 				{
 					type: actionTypes.SEND_MESSAGE_SUCCESS
 				},

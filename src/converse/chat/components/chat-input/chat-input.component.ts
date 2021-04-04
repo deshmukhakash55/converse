@@ -1,5 +1,4 @@
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Observable, Subscription } from 'rxjs';
 import { User } from 'src/converse/authentication/auth-types';
 import {
 	loggedInUser
@@ -11,7 +10,7 @@ import {
 	currentBlockConversationId, isSendMessageProgress, isSendMessageSuccess,
 	selectedSender
 } from '../../store/selectors/selectors';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 
 @Component({
@@ -19,40 +18,58 @@ import { Store } from '@ngrx/store';
 	templateUrl: './chat-input.component.html',
 	styleUrls: ['./chat-input.component.scss']
 })
-export class ChatInputComponent implements OnInit {
+export class ChatInputComponent implements OnInit, OnDestroy {
 	public loggedInUser: User;
 	public selectedSender: string;
 	public message = '';
 	public toggled = false;
 	public isSendMessageProgress: Observable<boolean>;
 	public currentBlockConversationIdSource: Observable<string>;
+	private loggedInUserAndSelectedSenderSubscription: Subscription;
+	private sendMessageSuccessSubscription: Subscription;
 
 	constructor(private store: Store) {}
 
 	public ngOnInit(): void {
-		this.initializeLoggedInUserAndSelectedSender();
-		this.initializeIsSendMessageProgress();
-		this.initializeSendMessageSuccessListener();
+		this.initializeLoggedInUserAndSelectedSenderSubscription();
 		this.initializeCurrentBlockConversationIdSource();
+		this.initializeIsSendMessageProgress();
+		this.initializeSendMessageSuccessSubscription();
 	}
 
-	private initializeLoggedInUserAndSelectedSender(): void {
-		this.store.select(loggedInUser).subscribe((user: User) => {
-			if (user) {
-				this.loggedInUser = user;
-				this.store
-					.select(selectedSender)
-					.subscribe((senderData: { selectedSender: string }) => {
-						this.selectedSender = senderData.selectedSender;
-					});
-			}
-		});
+	private initializeLoggedInUserAndSelectedSenderSubscription(): void {
+		this.loggedInUserAndSelectedSenderSubscription = this.store
+			.select(loggedInUser)
+			.subscribe((user: User) => {
+				if (user) {
+					this.loggedInUser = user;
+					this.store
+						.select(selectedSender)
+						.subscribe((selectedSenderData: string) => {
+							this.selectedSender = selectedSenderData;
+						});
+				}
+			});
 	}
 
 	private initializeCurrentBlockConversationIdSource(): void {
 		this.currentBlockConversationIdSource = this.store.select(
 			currentBlockConversationId
 		);
+	}
+
+	private initializeIsSendMessageProgress(): void {
+		this.isSendMessageProgress = this.store.select(isSendMessageProgress);
+	}
+
+	private initializeSendMessageSuccessSubscription(): void {
+		this.sendMessageSuccessSubscription = this.store
+			.select(isSendMessageSuccess)
+			.subscribe((isSendMessageSuccessStatus: boolean) => {
+				if (isSendMessageSuccessStatus) {
+					this.message = '';
+				}
+			});
 	}
 
 	public sendMessage(event: Event): void {
@@ -67,30 +84,13 @@ export class ChatInputComponent implements OnInit {
 		);
 	}
 
-	private initializeIsSendMessageProgress(): void {
-		this.isSendMessageProgress = this.store
-			.select(isSendMessageProgress)
-			.pipe(
-				map(
-					(isSendMessageProgressData: {
-						isSendMessageProgress: boolean;
-					}) => isSendMessageProgressData.isSendMessageProgress
-				)
-			);
-	}
-
-	private initializeSendMessageSuccessListener(): void {
-		this.store
-			.select(isSendMessageSuccess)
-			.subscribe((successData: { isSendMessageSuccess: boolean }) => {
-				if (successData.isSendMessageSuccess) {
-					this.message = '';
-				}
-			});
-	}
-
-	public handleSelection(event): void {
+	public handleSelection(event: { char: string }): void {
 		console.log(event.char);
 		this.message += event.char;
+	}
+
+	public ngOnDestroy(): void {
+		this.loggedInUserAndSelectedSenderSubscription.unsubscribe();
+		this.sendMessageSuccessSubscription.unsubscribe();
 	}
 }

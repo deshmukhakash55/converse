@@ -23,28 +23,28 @@
 			color: white;
 		}
 	}
+
+	&__logo {
+		font-size: 30px;
+		display: flex;
+		align-items: center;
+		gap: 0.5em;
+		color: white;
+	}
+
+	&__logo-image {
+		height: 40px;
+		width: 40px;
+	}
+
+	&__welcome-details {
+		width: 70%;
+		font-size: 18px;
+		line-height: 1.5;
+	}
 }
 
 .mat-card {
 	margin-right: 5vw;
 	width: 35%;
-}
-
-.logo {
-	font-size: 30px;
-	display: flex;
-	align-items: center;
-	gap: 0.5em;
-	color: white;
-}
-
-.logo-image {
-	height: 40px;
-	width: 40px;
-}
-
-.welcome-details {
-	width: 70%;
-	font-size: 18px;
-	line-height: 1.5;
 }

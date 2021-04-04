@@ -1,5 +1,6 @@
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { CONTACT_COLLECTION } from 'src/converse/contacts/contact-constants';
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 
@@ -13,7 +14,7 @@ export class ContactLoaderService {
 
 	public getProfileImagePathFor(email: string): Observable<string> {
 		return this.angularFirestore
-			.collection<ContactEntity>('contact', (ref) =>
+			.collection<ContactEntity>(CONTACT_COLLECTION, (ref) =>
 				ref.where('email', '==', email)
 			)
 			.valueChanges()
