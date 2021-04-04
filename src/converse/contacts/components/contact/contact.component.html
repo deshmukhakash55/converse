@@ -1,0 +1,45 @@
+<div class="contact">
+	<div class="contact__name-and-profile">
+		<div class="contact__details" (click)="openContactChat(contact.email)">
+			<img class="profile-image" [src]="contact.profileImagePath" />
+			<div>{{ contact.name }}</div>
+			<div
+				class="contact__block"
+				matTooltip="You have blocked this contact"
+				matTooltipPosition="above"
+				*ngIf="contact.blockChatId"
+			>
+				<mat-icon> block </mat-icon>
+			</div>
+		</div>
+		<button
+			class="contact__option-button"
+			mat-icon-button
+			[matMenuTriggerFor]="menu"
+		>
+			<mat-icon>more_vert</mat-icon>
+		</button>
+	</div>
+	<div class="contact__latest-chat" (click)="openContactChat(contact.email)">
+		<div class="contact__latest-message">
+			{{ getMessageSenderString(contact) }} {{ contact.latestMessage }}
+		</div>
+		<div class="contact__latest-contact-date">
+			{{ contact.latestContactDate | humanize }}
+		</div>
+	</div>
+</div>
+
+<mat-menu #menu="matMenu">
+	<button
+		mat-menu-item
+		*ngIf="!contact.blockChatId; else unblockButtonTemplate"
+		(click)="blockContact($event)"
+	>
+		Block
+	</button>
+</mat-menu>
+
+<ng-template #unblockButtonTemplate>
+	<button mat-menu-item (click)="unblockContact($event)">Unblock</button>
+</ng-template>

@@ -1,0 +1,145 @@
+<div class="register">
+	<form
+		class="register__form"
+		[formGroup]="signupForm"
+		(ngSubmit)="register($event)"
+	>
+		<div class="register__form-error" *ngIf="!!formError">
+			{{ formError }}
+		</div>
+		<mat-form-field appearance="outline">
+			<mat-label>Name</mat-label>
+			<input
+				matInput
+				placeholder="What should we call you ?"
+				formControlName="name"
+				type="text"
+				[errorStateMatcher]="landingErrorStateMatcher"
+			/>
+			<mat-error
+				*ngIf="
+					signupForm.controls.name.errors &&
+					signupForm.controls.name.errors.required
+				"
+			>
+				Please enter your name.
+			</mat-error>
+		</mat-form-field>
+		<mat-form-field appearance="outline">
+			<mat-label>Email</mat-label>
+			<input
+				matInput
+				placeholder="Email"
+				formControlName="email"
+				type="email"
+				[errorStateMatcher]="landingErrorStateMatcher"
+			/>
+			<mat-error
+				*ngIf="
+					signupForm.controls.email.errors &&
+					signupForm.controls.email.errors.required
+				"
+			>
+				Please enter your email.
+			</mat-error>
+			<mat-error
+				*ngIf="
+					signupForm.controls.email.errors &&
+					signupForm.controls.email.errors.email
+				"
+			>
+				Please enter valid a email.
+			</mat-error>
+		</mat-form-field>
+		<mat-form-field appearance="outline">
+			<mat-label>Password</mat-label>
+			<input
+				matInput
+				placeholder="Password"
+				formControlName="password"
+				type="password"
+				[errorStateMatcher]="landingErrorStateMatcher"
+			/>
+			<mat-error
+				*ngIf="
+					signupForm.controls.password.errors &&
+					signupForm.controls.password.errors.required
+				"
+			>
+				Please enter your password.
+			</mat-error>
+			<mat-error
+				*ngIf="
+					signupForm.controls.password.errors &&
+					signupForm.controls.password.errors.pattern
+				"
+			>
+				Password should have at least one lowercase letter, one
+				uppercase letter, one number, one special character and should
+				have minimum 8 characters
+			</mat-error>
+		</mat-form-field>
+		<mat-form-field appearance="outline">
+			<mat-label>Confirm Password</mat-label>
+			<input
+				matInput
+				placeholder="Confirm Password"
+				formControlName="confirmedPassword"
+				type="password"
+				[errorStateMatcher]="landingErrorStateMatcher"
+			/>
+			<mat-error
+				*ngIf="
+					signupForm.controls.confirmedPassword.errors &&
+					signupForm.controls.confirmedPassword.errors.required
+				"
+			>
+				Please confirm your password.
+			</mat-error>
+			<mat-error
+				*ngIf="
+					signupForm.controls.confirmedPassword.errors &&
+					signupForm.controls.confirmedPassword.errors.mismatch
+				"
+			>
+				Confirmed password doesn't match with your password
+			</mat-error>
+		</mat-form-field>
+		<div class="register__other-form-actions">
+			<span
+				class="register__other-form-actions__already-member"
+				(click)="openLoginTab()"
+			>
+				Already a member ?
+			</span>
+		</div>
+		<button
+			mat-raised-button
+			color="primary"
+			[disabled]="isSignupButtonDisabled || signupForm.invalid"
+		>
+			<mat-spinner
+				*ngIf="isRegisterProgress; else signupTmp"
+				[diameter]="30"
+				[style.margin]="'5px'"
+			></mat-spinner>
+		</button>
+	</form>
+	<div class="register__google-register-separator">OR</div>
+	<div class="register__google-register-block">
+		<button
+			mat-button-raised
+			class="register__google-register-button"
+			(click)="loginWithGoogle($event)"
+			[disabled]="isSignupButtonDisabled"
+		>
+			<img
+				width="20px"
+				src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/512px-Google_%22G%22_Logo.svg.png"
+			/>
+			Sign up with Google
+		</button>
+	</div>
+</div>
+
+<ng-template #signupTmp>Sign Up</ng-template>

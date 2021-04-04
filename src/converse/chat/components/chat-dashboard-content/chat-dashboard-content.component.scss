@@ -1,0 +1,13 @@
+.chat-dashboard-content {
+	height: 89.75vh;
+	display: flex;
+
+	&__contact-list {
+		width: 25%;
+	}
+
+	&__chat-window {
+		width: 75%;
+		padding: 1em;
+	}
+}

@@ -1,0 +1,41 @@
+<div
+	class="chat-input"
+	*ngIf="!(currentBlockConversationIdSource | async); else blockTemplate"
+>
+	<div class="chat-input__message-box">
+		<mat-form-field appearance="outline">
+			<input
+				matInput
+				[(ngModel)]="message"
+				placeholder="Enter message"
+				[disabled]="isSendMessageProgress | async"
+				(keyup.enter)="sendMessage($event)"
+			/>
+
+			<mat-icon
+				matSuffix
+				class="emoji-toggle-button"
+				(click)="toggled = !toggled"
+				[(emojiPickerIf)]="toggled"
+				[emojiPickerDirection]="'top'"
+				(emojiPickerSelect)="handleSelection($event)"
+				>sentiment_very_satisfied</mat-icon
+			>
+		</mat-form-field>
+	</div>
+	<div class="chat-input__send-button">
+		<button
+			mat-fab
+			color="primary"
+			(click)="sendMessage($event)"
+			[disabled]="isSendMessageProgress | async"
+		>
+			<mat-icon>send</mat-icon>
+		</button>
+	</div>
+</div>
+<ng-template #blockTemplate>
+	<div class="chat-input__block-message">
+		The User has blocked you. You can't send message
+	</div>
+</ng-template>

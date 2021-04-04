@@ -1,0 +1,11 @@
+<div class="contact-list">
+	<ng-container *ngFor="let contact of contacts; let i = index">
+		<div
+			class="contact-list__item"
+			[ngClass]="getClass(selectedSender, contact.email)"
+		>
+			<contact [contact]="contact"></contact>
+		</div>
+		<hr class="contact-separator" *ngIf="i < contacts.length - 1" />
+	</ng-container>
+</div>

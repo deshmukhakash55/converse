@@ -1,0 +1,29 @@
+.mat-form-field {
+	width: 98%;
+}
+
+.chat-input {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	&__message-box {
+		width: 94%;
+	}
+
+	&__send-button {
+		width: 6%;
+		padding-bottom: 1.34375em;
+		padding-right: 0.5em;
+	}
+
+	&__block-message {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+}
+
+.emoji-toggle-button {
+	cursor: pointer;
+}

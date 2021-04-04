@@ -1,0 +1,91 @@
+<div class="login">
+	<form
+		class="login__form"
+		[formGroup]="loginForm"
+		(ngSubmit)="login($event)"
+	>
+		<div class="login__form-error" *ngIf="!!formError">{{ formError }}</div>
+		<mat-form-field appearance="outline">
+			<mat-label>Email</mat-label>
+			<input
+				matInput
+				placeholder="Email"
+				formControlName="email"
+				type="email"
+			/>
+			<mat-error
+				*ngIf="
+					loginForm.controls.email.errors &&
+					loginForm.controls.email.errors.required
+				"
+			>
+				Please enter your email.
+			</mat-error>
+			<mat-error
+				*ngIf="
+					loginForm.controls.email.errors &&
+					loginForm.controls.email.errors.email
+				"
+			>
+				Please enter a valid email.
+			</mat-error>
+		</mat-form-field>
+		<mat-form-field appearance="outline">
+			<mat-label>Password</mat-label>
+			<input
+				matInput
+				placeholder="Password"
+				formControlName="password"
+				type="password"
+			/>
+			<mat-error
+				*ngIf="
+					loginForm.controls.password.errors &&
+					loginForm.controls.password.errors.required
+				"
+			>
+				Please enter your password.
+			</mat-error>
+		</mat-form-field>
+		<div class="login__other-form-actions">
+			<span class="login__other-form-actions__forgot-password">
+				Forgot Password ?
+			</span>
+			OR
+			<span
+				class="login__other-form-actions__new-member"
+				(click)="openRegisterTab()"
+			>
+				A new member ?
+			</span>
+		</div>
+		<button
+			mat-raised-button
+			color="primary"
+			[disabled]="isLoginButtonDisabled || loginForm.invalid"
+		>
+			<mat-spinner
+				*ngIf="isLoginProgress; else loginTmp"
+				[diameter]="30"
+				[style.margin]="'5px'"
+			></mat-spinner>
+		</button>
+	</form>
+	<div class="login__google-login-separator">OR</div>
+	<div class="login__google-login-block">
+		<button
+			mat-button-raised
+			class="login__google-login-button"
+			(click)="loginWithGoogle($event)"
+			[disabled]="isLoginButtonDisabled"
+		>
+			<img
+				width="20px"
+				src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/512px-Google_%22G%22_Logo.svg.png"
+			/>
+			Login with Google
+		</button>
+	</div>
+</div>
+
+<ng-template #loginTmp>Login</ng-template>

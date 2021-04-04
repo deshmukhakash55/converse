@@ -1,0 +1,31 @@
+.nav-bar {
+	display: flex;
+	justify-content: space-between;
+
+	&__profile-button {
+		margin-right: 1em;
+	}
+
+	&__profile-picture {
+		width: 2.5em;
+		height: 2.5em;
+		border-radius: 50%;
+	}
+
+	&__contact-search {
+		width: 50%;
+	}
+}
+
+.logo-image {
+	height: 40px;
+	width: 40px;
+}
+
+.logo {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	gap: 0.5em;
+	padding-left: 0.5em;
+}

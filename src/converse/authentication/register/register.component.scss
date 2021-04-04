@@ -1,0 +1,71 @@
+.register {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	gap: 1.5em;
+
+	&__form {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+		gap: 0.25em;
+		width: 100%;
+		margin-top: 1.5em;
+
+		&-error {
+			color: #c71e1e;
+			margin-bottom: 1em;
+		}
+	}
+
+	&__google-register-separator {
+		width: 100%;
+		display: flex;
+		align-items: center;
+
+		&:after,
+		&:before {
+			content: '';
+			width: 100%;
+			height: 1px;
+			background-color: #919191;
+			margin: 0 5px;
+		}
+	}
+
+	&__google-register-button {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		gap: 1em;
+		padding: 0.5em;
+		background-color: white;
+		border: 2px solid #3b3b3b;
+		border-radius: 0.5em;
+		margin-bottom: 1em;
+	}
+
+	&__other-form-actions {
+		width: 90%;
+		text-align: center;
+		padding-bottom: 1em;
+
+		&__forgot-password,
+		&__already-member {
+			color: #326c9c;
+			padding: 0.5em;
+			cursor: pointer;
+		}
+	}
+}
+
+.mat-form-field {
+	width: 90%;
+}
+
+.mat-progress-spinner circle,
+.mat-spinner circle {
+	stroke: white !important;
+}

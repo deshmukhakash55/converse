@@ -1,0 +1,16 @@
+<div class="chat-window">
+	<ng-container *ngIf="!(loaderObservable | async); else loadingChatTemplate">
+		<div class="chat-window__chat-messages-window">
+			<chat-messages-window></chat-messages-window>
+		</div>
+		<div class="chat-window__chat-input">
+			<chat-input></chat-input>
+		</div>
+	</ng-container>
+</div>
+
+<ng-template #loadingChatTemplate>
+	<div class="chat-window__loading-chat">
+		<mat-spinner></mat-spinner>
+	</div>
+</ng-template>

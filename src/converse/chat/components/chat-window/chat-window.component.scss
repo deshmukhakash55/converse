@@ -1,0 +1,27 @@
+@import '~@angular/material/theming';
+
+.chat-window {
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+
+	&__chat-messages-window {
+		height: 88%;
+		overflow-y: hidden;
+	}
+
+	&__chat-input {
+		height: 12%;
+	}
+
+	&__loading-chat {
+		height: 100%;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+}
+
+.mat-spinner circle {
+	stroke: #004d40 !important;
+}

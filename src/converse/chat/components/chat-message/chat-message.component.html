@@ -1,0 +1,31 @@
+<div class="chat-message">
+	<div
+		*ngIf="chatType === 'outgoing'; else incoming"
+		class="chat-message__outgoing"
+	>
+		<img
+			class="profile-image"
+			[src]="(profileImagePath | async) || defaultProfileImagePath"
+		/>
+		<div class="message">
+			<div class="message-sender">
+				{{ loggedInUserNameSource | async }}
+			</div>
+			<div class="message-text">{{ chat.message }}</div>
+			<div class="message-time">{{ chat.date | humanize }}</div>
+		</div>
+	</div>
+</div>
+
+<ng-template #incoming>
+	<div class="chat-message__incoming">
+		<img class="profile-image" [src]="profileImagePath | async" />
+		<div class="message">
+			<div class="message-sender">
+				{{ selectedSenderNameSource | async }}
+			</div>
+			<div class="message-text">{{ chat.message }}</div>
+			<div class="message-time">{{ chat.date | humanize }}</div>
+		</div>
+	</div>
+</ng-template>

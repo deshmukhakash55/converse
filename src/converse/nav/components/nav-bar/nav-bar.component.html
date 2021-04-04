@@ -1,0 +1,41 @@
+<mat-toolbar class="nav-bar" color="primary">
+	<span class="logo">
+		<span
+			><img
+				class="logo-image"
+				src="https://firebasestorage.googleapis.com/v0/b/converse-8ebf5.appspot.com/o/chat-white-logo.png?alt=media&token=df40daba-c435-4082-8fa1-c5801ddb7824"
+		/></span>
+		Converse
+	</span>
+	<div *ngIf="shouldShowNavSearchInput" class="nav-bar__contact-search">
+		<nav-search-input></nav-search-input>
+	</div>
+	<button
+		mat-icon-button
+		class="nav-bar__profile-button"
+		[matMenuTriggerFor]="menu"
+	>
+		<img
+			class="nav-bar__profile-picture"
+			[src]="(profilePictureSource | async) || defaultProfileImagePath"
+		/>
+	</button>
+</mat-toolbar>
+
+<mat-menu #menu="matMenu">
+	<button
+		mat-menu-item
+		*ngIf="shouldShowHomeMenuOption"
+		(click)="openChatDashboard($event)"
+	>
+		Home
+	</button>
+	<button
+		mat-menu-item
+		*ngIf="shouldShowSettingsMenuOption"
+		(click)="openChatSettings($event)"
+	>
+		Settings
+	</button>
+	<button mat-menu-item (click)="signOut()">Sign Out</button>
+</mat-menu>

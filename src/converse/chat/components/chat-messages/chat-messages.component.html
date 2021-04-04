@@ -1,0 +1,13 @@
+<cdk-virtual-scroll-viewport [itemSize]="1000" #virtualScroll>
+	<ul class="chat-messages__list">
+		<li
+			class="chat-messages__item"
+			*ngFor="let chat of chatsSource | async"
+		>
+			<chat-message
+				[chat]="chat"
+				[chatType]="getChatTypeFor(chat)"
+			></chat-message>
+		</li>
+	</ul>
+</cdk-virtual-scroll-viewport>

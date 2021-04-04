@@ -1,0 +1,62 @@
+.chat-message {
+	margin: 1em 1em;
+
+	& .message {
+		padding: 0.75em;
+		background-color: #006064;
+		color: white;
+		border-radius: 15px;
+		display: flex;
+		flex-direction: column;
+
+		&-time {
+			font-size: 11px;
+			text-align: end;
+			margin-top: 5px;
+		}
+
+		&-sender {
+			font-size: 11px;
+			margin-bottom: 5px;
+		}
+	}
+
+	&__incoming {
+		display: flex;
+		width: 100%;
+		justify-content: flex-start;
+		align-items: center;
+		gap: 1em;
+
+		& .message-text {
+			text-align: start;
+		}
+
+		& .message-sender {
+			text-align: start;
+		}
+	}
+
+	&__outgoing {
+		display: flex;
+		flex-direction: row-reverse;
+		width: 100%;
+		align-items: center;
+		gap: 1em;
+		justify-content: flex-start;
+
+		& .message-text {
+			text-align: end;
+		}
+
+		& .message-sender {
+			text-align: end;
+		}
+	}
+}
+
+.profile-image {
+	width: 3em;
+	height: 3em;
+	border-radius: 50%;
+}

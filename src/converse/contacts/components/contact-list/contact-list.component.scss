@@ -1,0 +1,29 @@
+.contact {
+	&-list {
+		display: flex;
+		flex-direction: column;
+		height: 89.5vh;
+		overflow-y: scroll;
+		overflow-x: hidden;
+		background-color: #e0f2f1;
+
+		&__item {
+			padding: 1em;
+
+			&:hover {
+				cursor: pointer;
+				background-color: #d4e6c8;
+			}
+		}
+	}
+
+	&-separator {
+		border: 0.1px solid #004011;
+		width: 100%;
+		margin: 0;
+	}
+}
+
+.active {
+	background-color: whitesmoke;
+}

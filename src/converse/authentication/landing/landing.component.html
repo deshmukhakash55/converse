@@ -1,0 +1,40 @@
+<div class="landing">
+	<div class="landing__details">
+		<div class="logo">
+			<span
+				><img
+					class="logo-image"
+					src="https://firebasestorage.googleapis.com/v0/b/converse-8ebf5.appspot.com/o/chat-white-logo.png?alt=media&token=df40daba-c435-4082-8fa1-c5801ddb7824"
+			/></span>
+			Converse
+		</div>
+		<div class="welcome-details">
+			Hello, Welcome to Converse chat platform.<br /><br />
+			<p>
+				We, here at Converse would take every essential care to insure
+				proper communication among your peers. We would also make sure,
+				all your data is safe with us. None of your data is shared with
+				any of our partners. Efforts are made on daily basis to build
+				the system that would make it more user friendly.<br /><br />In
+				case of any issues, please free to contact us at
+				<a href="mailto:deshmukhakash9689750481@gmail.com"
+					>deshmukhakash9689750481@gmail.com</a
+				>.
+			</p>
+		</div>
+	</div>
+	<mat-card>
+		<mat-tab-group
+			[selectedIndex]="selectedTabIndexSubject | async"
+			mat-stretch-tabs
+			dynamicHeight
+		>
+			<mat-tab label="Login">
+				<login (tabChange)="openRegisterTab()"></login>
+			</mat-tab>
+			<mat-tab label="Register">
+				<register (tabChange)="openLoginTab()"></register>
+			</mat-tab>
+		</mat-tab-group>
+	</mat-card>
+</div>

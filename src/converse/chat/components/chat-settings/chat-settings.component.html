@@ -1,0 +1,68 @@
+<div class="chat-settings">
+	<mat-card>
+		<div class="chat-settings__header">Settings</div>
+		<hr class="separator" />
+		<mat-card-content>
+			<div
+				*ngIf="
+					!(isAddOrDeleteChatProgress | async);
+					else loadingProfileImageTemplate
+				"
+				class="chat-settings__profile-image"
+			>
+				<img
+					*ngIf="
+						!!loggedInUser.profileImagePath;
+						else fileInputTemplate
+					"
+					class="profile-image"
+					[src]="loggedInUser.profileImagePath"
+					(click)="deleteProfileImage($event)"
+				/>
+
+				<div
+					class="delete-file"
+					*ngIf="!!loggedInUser.profileImagePath"
+					(click)="deleteProfileImage($event)"
+				>
+					<div class="text"><mat-icon>delete</mat-icon></div>
+				</div>
+			</div>
+			<div class="chat-settings__profile-details">
+				<div class="chat-settings__user-name">
+					<span>Name</span> :
+					<span>{{ loggedInUser.name }}</span>
+				</div>
+				<div class="chat-settings__user-email">
+					<span>Email</span> :
+					<span>{{ loggedInUser.email }}</span>
+				</div>
+			</div>
+		</mat-card-content>
+	</mat-card>
+</div>
+
+<ng-template #fileInputTemplate>
+	<div class="image-upload">
+		<label for="file-input">
+			<img class="file-input-image" [src]="defaultProfileImagePath" />
+		</label>
+
+		<div class="upload-file">
+			<div class="text"><mat-icon>upload</mat-icon></div>
+		</div>
+
+		<input
+			id="file-input"
+			type="file"
+			accept="image/*"
+			(change)="uploadNewProfileImage($event)"
+		/>
+	</div>
+</ng-template>
+
+<ng-template #loadingProfileImageTemplate>
+	<div class="chat-settings__profile-image-loading">
+		<mat-spinner></mat-spinner>
+	</div>
+</ng-template>

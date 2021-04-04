@@ -1,0 +1,31 @@
+<div>
+	<div class="search-input-block">
+		<input
+			class="search-input"
+			type="text"
+			matInput
+			[formControl]="searchControl"
+			[matAutocomplete]="auto"
+			placeholder="Search Contacts"
+		/>
+		<mat-icon class="search-icon">search</mat-icon>
+	</div>
+	<mat-autocomplete
+		#auto="matAutocomplete"
+		[displayWith]="displayFn"
+		(optionSelected)="openContactChat($event)"
+	>
+		<mat-option
+			*ngFor="let contact of filteredContactsSource | async"
+			[value]="contact"
+		>
+			<div class="option">
+				<img
+					class="option-profile-image"
+					[src]="contact.profileImagePath"
+				/>
+				{{ getSearchContactText(contact) }}
+			</div>
+		</mat-option>
+	</mat-autocomplete>
+</div>
