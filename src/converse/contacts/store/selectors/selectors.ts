@@ -26,8 +26,11 @@ export const selectedSenderName = createSelector(
 				return '';
 			}
 		}
-		return contactState.contacts.find(
+		const senderInContacts = contactState.contacts.find(
 			(contact: Contact) => contact.email === selectedSenderData
-		).name;
+		);
+		return senderInContacts && senderInContacts.name
+			? senderInContacts.name
+			: '';
 	}
 );

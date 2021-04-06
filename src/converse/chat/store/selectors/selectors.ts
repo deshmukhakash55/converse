@@ -44,7 +44,8 @@ export const contactProfileImagePath = createSelector(
 
 export const loggedInUserProfileImagePath = createSelector(
 	authStateSelector,
-	(state: AuthStoreState) => state.loggedInUser.profileImagePath
+	(state: AuthStoreState) =>
+		state.loggedInUser ? state.loggedInUser.profileImagePath || '' : ''
 );
 
 export const currentBlockConversationId = createSelector(

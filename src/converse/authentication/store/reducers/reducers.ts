@@ -12,7 +12,7 @@ import {
 import { createReducer, on } from '@ngrx/store';
 
 const initialState: AuthStoreState = {
-	loggedInUser: { id: '', name: '', email: '', profileImagePath: '' },
+	loggedInUser: null,
 	isLoginProgress: false,
 	isRegisterProgress: false,
 	isGoogleLoginProgress: false,
@@ -118,6 +118,6 @@ export const reducer = createReducer(
 	})),
 	on(logOutSuccess, (state: AuthStoreState) => ({
 		...state,
-		loggedInUser: {}
+		loggedInUser: null
 	}))
 );

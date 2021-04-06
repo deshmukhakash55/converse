@@ -49,14 +49,12 @@ export const isRegisterSuccess = createSelector(
 
 export const isLoginSuccess = createSelector(
 	authStateSelector,
-	(authStoreState: AuthStoreState) =>
-		!!Object.keys(authStoreState.loggedInUser).length
+	(authStoreState: AuthStoreState) => !!authStoreState.loggedInUser
 );
 
 export const isLogoutSuccess = createSelector(
 	authStateSelector,
-	(authStoreState: AuthStoreState) =>
-		!Object.keys(authStoreState.loggedInUser).length
+	(authStoreState: AuthStoreState) => !authStoreState.loggedInUser
 );
 
 export const loggedInUser = createSelector(
