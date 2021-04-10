@@ -25,7 +25,7 @@
 	</div>
 	<mat-card>
 		<mat-tab-group
-			[selectedIndex]="selectedTabIndexSubject | async"
+			[selectedIndex]="selectedTabIndexSubject | ngrxPush"
 			mat-stretch-tabs
 			dynamicHeight
 		>

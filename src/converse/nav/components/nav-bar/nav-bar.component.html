@@ -17,7 +17,7 @@
 	>
 		<img
 			class="nav-bar__profile-picture"
-			[src]="(profilePictureSource | async) || defaultProfileImagePath"
+			[src]="(profilePictureSource | ngrxPush) || defaultProfileImagePath"
 		/>
 	</button>
 </mat-toolbar>

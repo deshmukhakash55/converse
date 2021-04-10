@@ -1,5 +1,5 @@
 import { from, of } from 'rxjs';
-import { catchError, map, mergeMap } from 'rxjs/operators';
+import { catchError, mergeMap, switchMap } from 'rxjs/operators';
 import { reinitChatState } from 'src/converse/chat/store/actions/actions';
 import {
 	reinitContactState
@@ -48,20 +48,24 @@ export class AuthenticationEffects {
 	public loginWithEmailAndPassword = createEffect(() =>
 		this.actions.pipe(
 			ofType(actionTypes.LOGIN_START),
-			mergeMap(({ email, password }) =>
-				this.authenticationService.loginWith(email, password)
-			),
-			mergeMap((user: User) => [
-				{
-					type: actionTypes.LOGIN_SUCCESS,
-					user
-				},
-				{
-					type: actionTypes.LOGIN_END
-				}
-			]),
-			catchError((error: any) =>
-				from([loginFailure({ reason: error.message }), loginEnd()])
+			switchMap(({ email, password }) =>
+				this.authenticationService.loginWith(email, password).pipe(
+					mergeMap((user: User) => [
+						{
+							type: actionTypes.LOGIN_SUCCESS,
+							user
+						},
+						{
+							type: actionTypes.LOGIN_END
+						}
+					]),
+					catchError((error: any) =>
+						from([
+							loginFailure({ reason: error.message }),
+							loginEnd()
+						])
+					)
+				)
 			)
 		)
 	);
@@ -69,29 +73,32 @@ export class AuthenticationEffects {
 	public loginWithGoogle = createEffect(() =>
 		this.actions.pipe(
 			ofType(actionTypes.GOOGLE_LOGIN_START),
-			mergeMap(() => this.authenticationService.loginWithGoogle()),
-			mergeMap((user: User) => [
-				{
-					type: actionTypes.GOOGLE_LOGIN_SUCCESS,
-					user
-				},
-				{
-					type: actionTypes.GOOGLE_LOGIN_END
-				},
-				{
-					type: actionTypes.ADD_CONTACT,
-					contact: {
-						name: user.name,
-						email: user.email,
-						profileImagePath: user.profileImagePath
-					}
-				}
-			]),
-			catchError((error: any) =>
-				from([
-					googleLoginFailure({ reason: error.message }),
-					googleLoginEnd()
-				])
+			switchMap(() =>
+				this.authenticationService.loginWithGoogle().pipe(
+					mergeMap((user: User) => [
+						{
+							type: actionTypes.GOOGLE_LOGIN_SUCCESS,
+							user
+						},
+						{
+							type: actionTypes.GOOGLE_LOGIN_END
+						},
+						{
+							type: actionTypes.ADD_CONTACT,
+							contact: {
+								name: user.name,
+								email: user.email,
+								profileImagePath: user.profileImagePath
+							}
+						}
+					]),
+					catchError((error: any) =>
+						from([
+							googleLoginFailure({ reason: error.message }),
+							googleLoginEnd()
+						])
+					)
+				)
 			)
 		)
 	);
@@ -99,31 +106,30 @@ export class AuthenticationEffects {
 	public signupWithEmailAndPassword = createEffect(() =>
 		this.actions.pipe(
 			ofType(actionTypes.REGISTER_START),
-			mergeMap(({ name, email, password }) =>
-				this.authenticationService
-					.signupWith(email, password)
-					.pipe(map(() => ({ name, email, password })))
-			),
-			mergeMap(({ name, email }) => [
-				{
-					type: actionTypes.REGISTER_SUCCESS
-				},
-				{
-					type: actionTypes.REGISTER_END
-				},
-				{
-					type: actionTypes.ADD_CONTACT,
-					contact: {
-						name,
-						email
-					}
-				}
-			]),
-			catchError((error: any) =>
-				from([
-					registerFailure({ reason: error.message }),
-					registerEnd()
-				])
+			switchMap(({ name, email, password }) =>
+				this.authenticationService.signupWith(email, password).pipe(
+					mergeMap(() => [
+						{
+							type: actionTypes.REGISTER_SUCCESS
+						},
+						{
+							type: actionTypes.REGISTER_END
+						},
+						{
+							type: actionTypes.ADD_CONTACT,
+							contact: {
+								name,
+								email
+							}
+						}
+					]),
+					catchError((error: any) =>
+						from([
+							registerFailure({ reason: error.message }),
+							registerEnd()
+						])
+					)
+				)
 			)
 		)
 	);
@@ -132,12 +138,13 @@ export class AuthenticationEffects {
 		() =>
 			this.actions.pipe(
 				ofType(actionTypes.ADD_CONTACT),
-				mergeMap((contactPayload: ContactPayload) =>
-					this.contactSaverService
-						.addContact(contactPayload)
-						.then(() => {})
-				),
-				catchError((error) => of(console.log(error)))
+				switchMap((contactPayload: ContactPayload) =>
+					from(
+						this.contactSaverService
+							.addContact(contactPayload)
+							.then(() => {})
+					).pipe(catchError((error) => of(console.log(error))))
+				)
 			),
 		{ dispatch: false }
 	);

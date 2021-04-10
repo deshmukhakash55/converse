@@ -1,5 +1,5 @@
 import { from } from 'rxjs';
-import { catchError, mergeMap } from 'rxjs/operators';
+import { catchError, mergeMap, switchMap } from 'rxjs/operators';
 import { SearchContact } from '../../nav-types';
 import * as actionTypes from '../actions/action-types';
 import { searchContactsEnd, searchContactsFailure } from '../actions/actions';
@@ -17,23 +17,24 @@ export class NavEffects {
 	public searchContactsStart = createEffect(() =>
 		this.actions.pipe(
 			ofType(actionTypes.SEARCH_CONTACTS_START),
-			mergeMap(({ searchText }) =>
-				this.contactSearchService.searchContactsBy(searchText)
-			),
-			mergeMap((searchContacts: SearchContact[]) => [
-				{
-					type: actionTypes.SEARCH_CONTACTS_SUCCESS,
-					searchContacts
-				},
-				{
-					type: actionTypes.SEARCH_CONTACTS_END
-				}
-			]),
-			catchError((error: any) =>
-				from([
-					searchContactsFailure({ reason: error.message }),
-					searchContactsEnd()
-				])
+			switchMap(({ searchText }) =>
+				this.contactSearchService.searchContactsBy(searchText).pipe(
+					mergeMap((searchContacts: SearchContact[]) => [
+						{
+							type: actionTypes.SEARCH_CONTACTS_SUCCESS,
+							searchContacts
+						},
+						{
+							type: actionTypes.SEARCH_CONTACTS_END
+						}
+					]),
+					catchError((error: any) =>
+						from([
+							searchContactsFailure({ reason: error.message }),
+							searchContactsEnd()
+						])
+					)
+				)
 			)
 		)
 	);

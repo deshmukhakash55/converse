@@ -1,5 +1,7 @@
 <div class="chat-window">
-	<ng-container *ngIf="!(loaderObservable | async); else loadingChatTemplate">
+	<ng-container
+		*ngIf="!(loaderObservable | ngrxPush); else loadingChatTemplate"
+	>
 		<div class="chat-window__chat-messages-window">
 			<chat-messages-window></chat-messages-window>
 		</div>

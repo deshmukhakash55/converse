@@ -15,6 +15,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { RouterModule } from '@angular/router';
+import { ReactiveComponentModule } from '@ngrx/component';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
 import { ContactsModule } from '../contacts/contacts.module';
@@ -83,6 +84,7 @@ const routes = [
 		MatCardModule,
 		MatProgressSpinnerModule,
 		MatButtonModule,
+		ReactiveComponentModule,
 		ScrollingModule,
 		StoreModule.forFeature(ChatStoreKey, reducer),
 		EffectsModule.forFeature([ChatEffects])

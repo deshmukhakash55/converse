@@ -16,7 +16,7 @@
 		(optionSelected)="openContactChat($event)"
 	>
 		<mat-option
-			*ngFor="let contact of filteredContactsSource | async"
+			*ngFor="let contact of filteredContactsSource | ngrxPush"
 			[value]="contact"
 		>
 			<div class="nav-search-input__option">

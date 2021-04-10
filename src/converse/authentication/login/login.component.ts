@@ -77,6 +77,16 @@ export class LoginComponent implements OnInit, OnDestroy {
 					'The password is invalid or the user does not have a password.'
 				) {
 					this.formError = 'Invalid email or password';
+				} else if (
+					loginError ===
+					'There is no user record corresponding to this identifier. The user may have been deleted.'
+				) {
+					this.formError =
+						'Account with this email do not exists. Try registering.';
+				} else if (loginError === 'User not logged in') {
+					this.formError = '';
+				} else {
+					this.formError = 'Unknown error';
 				}
 			});
 	}

@@ -1,5 +1,5 @@
 import { from } from 'rxjs';
-import { catchError, map, mergeMap } from 'rxjs/operators';
+import { catchError, map, mergeMap, switchMap } from 'rxjs/operators';
 import { Chat } from '../../chat-types';
 import * as actionTypes from '../actions/action-types';
 import {
@@ -32,44 +32,38 @@ export class ChatEffects {
 	public loadChatStart = createEffect(() =>
 		this.actions.pipe(
 			ofType(actionTypes.LOAD_CHAT_START),
-			mergeMap(({ senderEmail, recipientEmail }) =>
+			switchMap(({ senderEmail, recipientEmail }) =>
 				this.chatLoaderService
 					.loadChatsFor(senderEmail, recipientEmail)
 					.pipe(
-						map((chats: Chat[]) => ({
-							chats,
-							senderEmail,
-							recipientEmail
-						}))
+						mergeMap((chats: Chat[]) =>
+							this.chatBlockLoaderService
+								.isChatBlockedFor(senderEmail, recipientEmail)
+								.pipe(
+									map((blockChatId: string) => ({
+										chats,
+										blockChatId
+									}))
+								)
+						),
+						mergeMap(({ chats, blockChatId }) => [
+							{
+								type: actionTypes.LOAD_CHAT_SUCCESS,
+								chats,
+								senderEmail,
+								blockChatId
+							},
+							{
+								type: actionTypes.LOAD_CHAT_END
+							}
+						]),
+						catchError((error) =>
+							from([
+								loadChatFailure({ reason: error.message }),
+								loadChatEnd()
+							])
+						)
 					)
-			),
-			mergeMap(({ chats, senderEmail, recipientEmail }) =>
-				this.chatBlockLoaderService
-					.isChatBlockedFor(senderEmail, recipientEmail)
-					.pipe(
-						map((blockChatId: string) => ({
-							chats,
-							senderEmail,
-							blockChatId
-						}))
-					)
-			),
-			mergeMap(({ chats, senderEmail, blockChatId }) => [
-				{
-					type: actionTypes.LOAD_CHAT_SUCCESS,
-					chats,
-					senderEmail,
-					blockChatId
-				},
-				{
-					type: actionTypes.LOAD_CHAT_END
-				}
-			]),
-			catchError((error) =>
-				from([
-					loadChatFailure({ reason: error.message }),
-					loadChatEnd()
-				])
 			)
 		)
 	);
@@ -77,23 +71,29 @@ export class ChatEffects {
 	public sendMessageStart = createEffect(() =>
 		this.actions.pipe(
 			ofType(actionTypes.SEND_MESSAGE_START),
-			mergeMap((sendMessageStartPayload: SendMessageStartPayload) =>
-				this.chatSaverService.sendMessage(
-					sendMessageStartPayload.from,
-					sendMessageStartPayload.to,
-					sendMessageStartPayload.message
-				)
-			),
-			mergeMap((_: any) => [
-				{
-					type: actionTypes.SEND_MESSAGE_SUCCESS
-				},
-				{
-					type: actionTypes.SEND_MESSAGE_END
-				}
-			]),
-			catchError((error: any) =>
-				from([sendMessageFailure(error.message), sendMessageEnd()])
+			switchMap((sendMessageStartPayload: SendMessageStartPayload) =>
+				this.chatSaverService
+					.sendMessage(
+						sendMessageStartPayload.from,
+						sendMessageStartPayload.to,
+						sendMessageStartPayload.message
+					)
+					.pipe(
+						mergeMap((_: any) => [
+							{
+								type: actionTypes.SEND_MESSAGE_SUCCESS
+							},
+							{
+								type: actionTypes.SEND_MESSAGE_END
+							}
+						]),
+						catchError((error: any) =>
+							from([
+								sendMessageFailure(error.message),
+								sendMessageEnd()
+							])
+						)
+					)
 			)
 		)
 	);
@@ -101,25 +101,27 @@ export class ChatEffects {
 	public deleteProfileImageStart = createEffect(() =>
 		this.actions.pipe(
 			ofType(actionTypes.DELETE_PROFILE_IMAGE_START),
-			mergeMap(({ profileImagePath, loggedInEmail }) =>
-				this.contactProfileImageService.deleteProfileImage(
-					profileImagePath,
-					loggedInEmail
-				)
-			),
-			mergeMap(() => [
-				{
-					type: actionTypes.DELETE_PROFILE_IMAGE_SUCCESS
-				},
-				{
-					type: actionTypes.DELETE_PROFILE_IMAGE_END
-				}
-			]),
-			catchError((error: any) =>
-				from([
-					deleteProfileImageFailure({ reason: error.message }),
-					deleteProfileImageEnd()
-				])
+			switchMap(({ profileImagePath, loggedInEmail }) =>
+				this.contactProfileImageService
+					.deleteProfileImage(profileImagePath, loggedInEmail)
+					.pipe(
+						mergeMap(() => [
+							{
+								type: actionTypes.DELETE_PROFILE_IMAGE_SUCCESS
+							},
+							{
+								type: actionTypes.DELETE_PROFILE_IMAGE_END
+							}
+						]),
+						catchError((error: any) =>
+							from([
+								deleteProfileImageFailure({
+									reason: error.message
+								}),
+								deleteProfileImageEnd()
+							])
+						)
+					)
 			)
 		)
 	);
@@ -127,25 +129,27 @@ export class ChatEffects {
 	public addProfileImageStart = createEffect(() =>
 		this.actions.pipe(
 			ofType(actionTypes.ADD_PROFILE_IMAGE_START),
-			mergeMap(({ file, loggedInEmail }) =>
-				this.contactProfileImageService.addProfileImage(
-					file,
-					loggedInEmail
-				)
-			),
-			mergeMap(() => [
-				{
-					type: actionTypes.ADD_PROFILE_IMAGE_SUCCESS
-				},
-				{
-					type: actionTypes.ADD_PROFILE_IMAGE_END
-				}
-			]),
-			catchError((error: any) =>
-				from([
-					addProfileImageFailure({ reason: error.message }),
-					addProfileImageEnd()
-				])
+			switchMap(({ file, loggedInEmail }) =>
+				this.contactProfileImageService
+					.addProfileImage(file, loggedInEmail)
+					.pipe(
+						mergeMap(() => [
+							{
+								type: actionTypes.ADD_PROFILE_IMAGE_SUCCESS
+							},
+							{
+								type: actionTypes.ADD_PROFILE_IMAGE_END
+							}
+						]),
+						catchError((error: any) =>
+							from([
+								addProfileImageFailure({
+									reason: error.message
+								}),
+								addProfileImageEnd()
+							])
+						)
+					)
 			)
 		)
 	);

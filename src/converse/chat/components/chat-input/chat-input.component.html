@@ -1,6 +1,6 @@
 <div
 	class="chat-input"
-	*ngIf="!(currentBlockConversationIdSource | async); else blockTemplate"
+	*ngIf="!(currentBlockConversationIdSource | ngrxPush); else blockTemplate"
 >
 	<div class="chat-input__message-box">
 		<mat-form-field appearance="outline">
@@ -8,7 +8,7 @@
 				matInput
 				[(ngModel)]="message"
 				placeholder="Enter message"
-				[disabled]="isSendMessageProgress | async"
+				[disabled]="isSendMessageProgress | ngrxPush"
 				(keyup.enter)="sendMessage($event)"
 			/>
 
@@ -28,7 +28,7 @@
 			mat-fab
 			color="primary"
 			(click)="sendMessage($event)"
-			[disabled]="isSendMessageProgress | async"
+			[disabled]="isSendMessageProgress | ngrxPush"
 		>
 			<mat-icon>send</mat-icon>
 		</button>

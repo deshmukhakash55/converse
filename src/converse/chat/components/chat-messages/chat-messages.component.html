@@ -2,7 +2,7 @@
 	<ul class="chat-messages__list">
 		<li
 			class="chat-messages__item"
-			*ngFor="let chat of chatsSource | async"
+			*ngFor="let chat of chatsSource | ngrxPush"
 		>
 			<chat-message
 				[chat]="chat"

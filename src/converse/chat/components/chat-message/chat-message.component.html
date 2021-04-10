@@ -5,11 +5,11 @@
 	>
 		<img
 			class="chat-message__profile-image"
-			[src]="(profileImagePath | async) || defaultProfileImagePath"
+			[src]="(profileImagePath | ngrxPush) || defaultProfileImagePath"
 		/>
 		<div class="message">
 			<div class="message-sender">
-				{{ loggedInUserNameSource | async }}
+				{{ loggedInUserNameSource | ngrxPush }}
 			</div>
 			<div class="message-text">{{ chat.message }}</div>
 			<div class="message-time">{{ chat.date | humanize }}</div>
@@ -21,11 +21,11 @@
 	<div class="chat-message__incoming">
 		<img
 			class="chat-message__profile-image"
-			[src]="profileImagePath | async"
+			[src]="profileImagePath | ngrxPush"
 		/>
 		<div class="message">
 			<div class="message-sender">
-				{{ selectedSenderNameSource | async }}
+				{{ selectedSenderNameSource | ngrxPush }}
 			</div>
 			<div class="message-text">{{ chat.message }}</div>
 			<div class="message-time">{{ chat.date | humanize }}</div>

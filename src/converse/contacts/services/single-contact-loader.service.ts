@@ -28,7 +28,7 @@ export class SingleContactLoaderService {
 	public loadSingleContactDetailsFor(
 		searchContact: SearchContact,
 		loggedInEmail: string
-	): Observable<{ contact: Contact; loggedInEmail: string }> {
+	): Observable<Contact> {
 		const toChatEntities = this.getLatestChatEntitites(
 			searchContact.email,
 			loggedInEmail
@@ -52,8 +52,7 @@ export class SingleContactLoaderService {
 			mergeMap((contact: Contact) =>
 				this.updateContactBlockChatId(contact, loggedInEmail)
 			),
-			first(),
-			map((contact: Contact) => ({ contact, loggedInEmail }))
+			first()
 		);
 	}
 

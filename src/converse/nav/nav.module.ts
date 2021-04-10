@@ -13,6 +13,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { RouterModule } from '@angular/router';
+import { ReactiveComponentModule } from '@ngrx/component';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
 import { NavBarComponent } from './components/nav-bar/nav-bar.component';
@@ -33,6 +34,7 @@ import { ContactSearchService } from './services/contact-search.service';
 		MatFormFieldModule,
 		MatInputModule,
 		MatAutocompleteModule,
+		ReactiveComponentModule,
 		ReactiveFormsModule,
 		AngularFireModule,
 		StoreModule.forFeature(NavStoreKey, reducer),
