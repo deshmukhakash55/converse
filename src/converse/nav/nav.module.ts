@@ -41,6 +41,6 @@ import { ContactSearchService } from './services/contact-search.service';
 		EffectsModule.forFeature([NavEffects])
 	],
 	providers: [ContactSearchService],
-	exports: [NavBarComponent]
+	exports: [NavBarComponent, NavSearchInputComponent]
 })
 export class NavModule {}

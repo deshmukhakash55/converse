@@ -43,6 +43,7 @@ body {
 body {
 	margin: 0;
 	font-family: Roboto, 'Helvetica Neue', sans-serif;
+	overflow: hidden;
 }
 
 /* width */
@@ -69,4 +70,12 @@ body {
 emoji-picker {
 	bottom: 192px;
 	right: 463px;
+}
+
+.mat-form-field-wrapper {
+	padding-bottom: 0 !important;
+}
+
+.mat-drawer-inner-container {
+	overflow: hidden !important;
 }

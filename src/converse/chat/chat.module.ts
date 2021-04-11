@@ -13,7 +13,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSidenavModule } from '@angular/material/sidenav';
 import { RouterModule } from '@angular/router';
 import { ReactiveComponentModule } from '@ngrx/component';
 import { EffectsModule } from '@ngrx/effects';
@@ -79,10 +79,10 @@ const routes = [
 		AngularFireModule,
 		AngularFireStorageModule,
 		MatFormFieldModule,
+		MatSidenavModule,
 		MatInputModule,
 		MatIconModule,
 		MatCardModule,
-		MatProgressSpinnerModule,
 		MatButtonModule,
 		ReactiveComponentModule,
 		ScrollingModule,

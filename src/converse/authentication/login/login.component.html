@@ -64,11 +64,11 @@
 			color="primary"
 			[disabled]="isLoginButtonDisabled || loginForm.invalid"
 		>
-			<mat-spinner
+			<img
 				*ngIf="isLoginProgress; else loginTmp"
-				[diameter]="30"
-				[style.margin]="'5px'"
-			></mat-spinner>
+				src="../../../../assets/loading.gif"
+				width="30px"
+			/>
 		</button>
 	</form>
 	<div class="login__google-login-separator">OR</div>

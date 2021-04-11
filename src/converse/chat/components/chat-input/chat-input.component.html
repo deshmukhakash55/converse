@@ -4,13 +4,14 @@
 >
 	<div class="chat-input__message-box">
 		<mat-form-field appearance="outline">
-			<input
+			<textarea
+				class="chat-input__textarea"
+				rows="1"
 				matInput
 				[(ngModel)]="message"
 				placeholder="Enter message"
 				[disabled]="isSendMessageProgress | ngrxPush"
-				(keyup.enter)="sendMessage($event)"
-			/>
+			></textarea>
 
 			<mat-icon
 				matSuffix

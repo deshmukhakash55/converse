@@ -42,9 +42,35 @@
 		font-size: 18px;
 		line-height: 1.5;
 	}
+
+	@media (max-width: 600px) {
+		justify-content: center;
+		align-items: center;
+		flex-direction: column;
+		gap: 1em;
+
+		&__welcome-details {
+			display: none;
+		}
+
+		&__details {
+			padding-left: 0;
+		}
+
+		&__logo {
+			justify-content: center;
+		}
+	}
 }
 
 .mat-card {
 	margin-right: 5vw;
 	width: 35%;
+}
+
+@media (max-width: 600px) {
+	.mat-card {
+		margin: 0;
+		width: 75%;
+	}
 }

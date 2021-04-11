@@ -1,0 +1,46 @@
+.mat-form-field {
+	width: 100%;
+}
+
+.contact-search-input {
+	&__search-input-block {
+		position: relative;
+	}
+
+	&__search-input {
+		border: 1px solid #8c8c8c;
+		border-radius: 5px;
+		padding: 0.75em;
+		font-size: 16px;
+		padding-right: 2.5em;
+
+		&:active,
+		&:hover,
+		&:focus {
+			border: 1px solid white;
+		}
+
+		&::-webkit-input-placeholder {
+			font-size: 16px;
+		}
+	}
+
+	&__search-icon {
+		position: absolute;
+		bottom: 20%;
+		right: 4%;
+		cursor: pointer;
+	}
+
+	&__option {
+		display: flex;
+		align-items: center;
+
+		&-profile-image {
+			width: 1.5em;
+			height: 1.5em;
+			border-radius: 50%;
+			margin-right: 1em;
+		}
+	}
+}

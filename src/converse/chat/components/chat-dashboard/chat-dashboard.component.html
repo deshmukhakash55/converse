@@ -1,2 +1,16 @@
-<div class="chat-dashboard__nav-bar"><nav-bar></nav-bar></div>
-<router-outlet name="chatDashboardOutlet"></router-outlet>
+<mat-drawer-container>
+	<mat-drawer #sideDrawer>
+		<div class="chat-dashboard__contact-search">
+			<contact-search-input></contact-search-input>
+		</div>
+		<div class="chat-dashboard__drawer-contact-list">
+			<contact-list listHeight="100vh"></contact-list>
+		</div>
+	</mat-drawer>
+	<mat-drawer-content>
+		<div class="chat-dashboard__nav-bar">
+			<nav-bar [sideDrawer]="sideDrawer"></nav-bar>
+		</div>
+		<router-outlet name="chatDashboardOutlet"></router-outlet
+	></mat-drawer-content>
+</mat-drawer-container>

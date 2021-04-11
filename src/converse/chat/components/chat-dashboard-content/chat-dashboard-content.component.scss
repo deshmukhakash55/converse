@@ -8,6 +8,16 @@
 
 	&__chat-window {
 		width: 75%;
-		padding: 1em;
+		padding: 0.5em;
+	}
+
+	@media screen and (max-width: 805px) {
+		&__contact-list {
+			display: none;
+		}
+
+		&__chat-window {
+			width: 100%;
+		}
 	}
 }

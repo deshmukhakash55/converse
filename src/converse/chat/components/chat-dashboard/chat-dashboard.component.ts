@@ -6,6 +6,7 @@ import {
 	AfterViewInit, Component, ComponentFactoryResolver, ComponentRef, Injector,
 	OnDestroy, OnInit, ViewChild
 } from '@angular/core';
+import { MatDrawer } from '@angular/material/sidenav';
 import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
 import { Store } from '@ngrx/store';
 import {
@@ -22,6 +23,7 @@ import {
 })
 export class ChatDashboardComponent
 	implements OnInit, AfterViewInit, OnDestroy {
+	@ViewChild(MatDrawer) public sideDrawer: MatDrawer;
 	@ViewChild(RouterOutlet) public routerOutlet: RouterOutlet;
 	private isLoginSuccessSubscription: Subscription;
 	constructor(

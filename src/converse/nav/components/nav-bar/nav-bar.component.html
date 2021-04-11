@@ -1,12 +1,20 @@
 <mat-toolbar class="nav-bar" color="primary">
-	<span class="nav-bar__logo">
+	<div class="nav-bar__logo-and-side-drawer-toggle">
 		<span
-			><img
-				class="nav-bar__logo-image"
-				src="https://firebasestorage.googleapis.com/v0/b/converse-8ebf5.appspot.com/o/chat-white-logo.png?alt=media&token=df40daba-c435-4082-8fa1-c5801ddb7824"
-		/></span>
-		Converse
-	</span>
+			(click)="toggleSideDrawer($event)"
+			class="nav-bar__side-drawer-toggle"
+		>
+			<mat-icon>menu</mat-icon>
+		</span>
+		<span class="nav-bar__logo">
+			<span
+				><img
+					class="nav-bar__logo-image"
+					src="https://firebasestorage.googleapis.com/v0/b/converse-8ebf5.appspot.com/o/chat-white-logo.png?alt=media&token=df40daba-c435-4082-8fa1-c5801ddb7824"
+			/></span>
+			Converse
+		</span>
+	</div>
 	<div *ngIf="shouldShowNavSearchInput" class="nav-bar__contact-search">
 		<nav-search-input></nav-search-input>
 	</div>

@@ -10,6 +10,11 @@ export const isLoadContactsProgress = createSelector(
 	(state: ContactStoreState) => state.isLoadContactsProgress
 );
 
+export const isLoadSingleContactProgress = createSelector(
+	contactStateSelector,
+	(state: ContactStoreState) => state.isLoadSingleContactProgress
+);
+
 export const contacts = createSelector(
 	contactStateSelector,
 	(state: ContactStoreState) => state.contacts

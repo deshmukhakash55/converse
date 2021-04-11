@@ -1,8 +1,11 @@
 import { combineLatest, Observable, of } from 'rxjs';
 import { mergeMap } from 'rxjs/operators';
+import {
+	isLoadContactsProgress
+} from 'src/converse/contacts/store/selectors/selectors';
 import { Chat } from '../../chat-types';
 import {
-	chats, isLoadChatProgress, selectedSender
+	chats, isLoadChatProgress, isSendMessageProgress, selectedSender
 } from '../../store/selectors/selectors';
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
@@ -16,7 +19,9 @@ export class ChatWindowComponent implements OnInit {
 	private loadChatProgressSource: Observable<boolean>;
 	private chatsSource: Observable<Chat[]>;
 	public loaderObservable: Observable<boolean>;
+	private isSendMessageProgressSource: Observable<boolean>;
 	private selectedSenderSource: Observable<string>;
+	private isLoadContactsProgressSource: Observable<boolean>;
 
 	constructor(private store: Store) {}
 
@@ -24,6 +29,8 @@ export class ChatWindowComponent implements OnInit {
 		this.initializeLoadChatProgressSource();
 		this.initializeChatsSource();
 		this.initializeSelectedSenderSource();
+		this.initializeIsLoadContactsProgress();
+		this.initializeIsSendMessageProgress();
 		this.initializeLoaderObservable();
 	}
 
@@ -39,36 +46,66 @@ export class ChatWindowComponent implements OnInit {
 		this.selectedSenderSource = this.store.select(selectedSender);
 	}
 
+	private initializeIsLoadContactsProgress(): void {
+		this.isLoadContactsProgressSource = this.store.select(
+			isLoadContactsProgress
+		);
+	}
+
+	private initializeIsSendMessageProgress(): void {
+		this.isSendMessageProgressSource = this.store.select(
+			isSendMessageProgress
+		);
+	}
+
 	private initializeLoaderObservable(): void {
 		this.loaderObservable = combineLatest([
 			this.loadChatProgressSource,
 			this.chatsSource,
-			this.selectedSenderSource
+			this.selectedSenderSource,
+			this.isLoadContactsProgressSource,
+			this.isSendMessageProgressSource
 		]).pipe(
 			mergeMap(
-				([isLoadChatProgressStatus, chatList, selectedSenderEmail]: [
-					boolean,
-					Chat[],
-					string
-				]) => {
+				([
+					isLoadChatProgressStatus,
+					chatList,
+					selectedSenderEmail,
+					isLoadContactsProgressStatus,
+					isSendMessageProgressStatus
+				]: [boolean, Chat[], string, boolean, boolean]) => {
 					return of(
-						isLoadChatProgressStatus &&
-							this.isCurrentChatNotOpened(
-								chatList,
-								selectedSenderEmail
-							)
+						this.shouldShowLoader(
+							chatList,
+							selectedSenderEmail,
+							isLoadChatProgressStatus,
+							isLoadContactsProgressStatus,
+							isSendMessageProgressStatus
+						)
 					);
 				}
 			)
 		);
 	}
 
-	private isCurrentChatNotOpened(
+	private shouldShowLoader(
 		chatList: Chat[],
-		selectedSenderEmail: string
+		selectedSenderEmail: string,
+		isLoadChatProgressStatus: boolean,
+		isLoadContactsProgressStatus: boolean,
+		isSendMessageProgressStatus: boolean
 	): boolean {
-		if (chatList.length === 0) {
+		if (isSendMessageProgressStatus) {
+			return false;
+		}
+		if (isLoadChatProgressStatus || isLoadContactsProgressStatus) {
 			return true;
+		}
+		if (!selectedSenderEmail) {
+			return true;
+		}
+		if (chatList.length === 0 && !isLoadChatProgressStatus) {
+			return false;
 		}
 		return !(
 			chatList[0].from === selectedSenderEmail ||

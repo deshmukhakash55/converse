@@ -1,18 +1,16 @@
 <div class="chat-window">
-	<ng-container
-		*ngIf="!(loaderObservable | ngrxPush); else loadingChatTemplate"
-	>
-		<div class="chat-window__chat-messages-window">
-			<chat-messages-window></chat-messages-window>
-		</div>
-		<div class="chat-window__chat-input">
-			<chat-input></chat-input>
+	<ng-container *ngIf="loaderObservable | ngrxPush; else chatTemplate">
+		<div class="chat-window__loading-chat">
+			<img src="../../../../assets/loading.gif" />
 		</div>
 	</ng-container>
 </div>
 
-<ng-template #loadingChatTemplate>
-	<div class="chat-window__loading-chat">
-		<mat-spinner></mat-spinner>
+<ng-template #chatTemplate>
+	<div class="chat-window__chat-messages-window">
+		<chat-messages-window></chat-messages-window>
+	</div>
+	<div class="chat-window__chat-input">
+		<chat-input class="chat-window__chat-input-component"></chat-input>
 	</div>
 </ng-template>

@@ -118,11 +118,11 @@
 			color="primary"
 			[disabled]="isSignupButtonDisabled || signupForm.invalid"
 		>
-			<mat-spinner
+			<img
 				*ngIf="isRegisterProgress; else signupTmp"
-				[diameter]="30"
-				[style.margin]="'5px'"
-			></mat-spinner>
+				src="../../../../assets/loading.gif"
+				width="30px"
+			/>
 		</button>
 	</form>
 	<div class="register__google-register-separator">OR</div>

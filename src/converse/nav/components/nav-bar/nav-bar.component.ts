@@ -8,7 +8,8 @@ import { logOut } from '../../../authentication/store/actions/actions';
 import {
 	isLogoutSuccess
 } from '../../../authentication/store/selectors/selectors';
-import { Component, DoCheck, OnDestroy, OnInit } from '@angular/core';
+import { Component, DoCheck, Input, OnDestroy, OnInit } from '@angular/core';
+import { MatDrawer } from '@angular/material/sidenav';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 
@@ -18,6 +19,7 @@ import { Store } from '@ngrx/store';
 	styleUrls: ['./nav-bar.component.scss']
 })
 export class NavBarComponent implements OnInit, DoCheck, OnDestroy {
+	@Input() public sideDrawer: MatDrawer;
 	public profilePictureSource: Observable<string>;
 	public shouldShowSettingsMenuOption: boolean;
 	public shouldShowHomeMenuOption: boolean;
@@ -86,5 +88,10 @@ export class NavBarComponent implements OnInit, DoCheck, OnDestroy {
 	public ngOnDestroy(): void {
 		this.shouldShowNavSearchInputSubscription.unsubscribe();
 		this.logoutSubscription.unsubscribe();
+	}
+
+	public toggleSideDrawer(event: Event): void {
+		event.preventDefault();
+		this.sideDrawer.toggle();
 	}
 }

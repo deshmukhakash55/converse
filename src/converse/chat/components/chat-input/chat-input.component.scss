@@ -7,14 +7,28 @@
 	justify-content: center;
 	align-items: center;
 
+	&__textarea {
+		resize: none;
+	}
+
 	&__message-box {
-		width: 94%;
+		width: 90%;
 	}
 
 	&__send-button {
-		width: 6%;
-		padding-bottom: 1.34375em;
-		padding-right: 0.5em;
+		width: 10%;
+		display: flex;
+		justify-content: center;
+	}
+
+	@media (max-width: 509px) {
+		&__message-box {
+			width: 80%;
+		}
+
+		&__send-button {
+			width: 20%;
+		}
 	}
 
 	&__block-message {

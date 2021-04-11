@@ -74,9 +74,10 @@ export class ContactComponent implements OnInit, OnDestroy {
 	}
 
 	public openContactChat(senderEmail: string): void {
-		this.store
+		const subscription = this.store
 			.select(loggedInUser)
 			.subscribe(({ email }: { email: string }) => {
+				this.loggedInEmail = email;
 				this.store.dispatch(
 					loadChatStart({
 						senderEmail,
@@ -84,6 +85,7 @@ export class ContactComponent implements OnInit, OnDestroy {
 					})
 				);
 				this.store.dispatch(loadChatProgress());
+				subscription.unsubscribe();
 			});
 	}
 

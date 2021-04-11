@@ -2,10 +2,16 @@
 	&-list {
 		display: flex;
 		flex-direction: column;
-		height: 89.5vh;
 		overflow-y: scroll;
 		overflow-x: hidden;
 		background-color: #e0f2f1;
+
+		&__loading-contacts {
+			height: 100%;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
 
 		&__item {
 			padding: 1em;

@@ -1,6 +1,7 @@
 .nav-bar {
 	display: flex;
 	justify-content: space-between;
+	height: 100%;
 
 	&__profile-button {
 		margin-right: 1em;
@@ -16,6 +17,12 @@
 		width: 50%;
 	}
 
+	&__logo-and-side-drawer-toggle {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+
 	&__logo {
 		display: flex;
 		justify-content: center;
@@ -26,6 +33,22 @@
 		&-image {
 			height: 40px;
 			width: 40px;
+		}
+	}
+
+	&__side-drawer-toggle {
+		cursor: pointer;
+	}
+
+	@media (max-width: 804px) {
+		&__contact-search {
+			display: none;
+		}
+	}
+
+	@media (min-width: 805px) {
+		&__side-drawer-toggle {
+			display: none;
 		}
 	}
 }

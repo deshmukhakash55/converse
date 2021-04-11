@@ -11,7 +11,6 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTabsModule } from '@angular/material/tabs';
 import { ReactiveComponentModule } from '@ngrx/component';
 import { EffectsModule } from '@ngrx/effects';
@@ -36,7 +35,6 @@ import { ContactSaverService } from './services/contact-saver.service';
 		MatFormFieldModule,
 		MatIconModule,
 		MatInputModule,
-		MatProgressSpinnerModule,
 		MatDialogModule,
 		AngularFireAuthModule,
 		ReactiveComponentModule,
