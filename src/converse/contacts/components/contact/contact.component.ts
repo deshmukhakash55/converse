@@ -1,19 +1,23 @@
 import { Subscription } from 'rxjs';
-import { User } from 'src/converse/authentication/auth-types';
-import {
-	loggedInUser
-} from 'src/converse/authentication/store/selectors/selectors';
+import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { MatMenuTrigger } from '@angular/material/menu';
+import { Store } from '@ngrx/store';
 import {
 	loadChatProgress, loadChatStart
 } from 'src/converse/chat/store/actions/actions';
-import { Contact } from '../../contact-types';
+import {
+	loggedInUser
+} from 'src/converse/authentication/store/selectors/selectors';
+import { User } from 'src/converse/authentication/auth-types';
+import { LoadChatStartPayload } from 'src/converse/chat/store/payload-types';
 import {
 	blockContactProgress, blockContactStart, unblockContactProgress,
 	unblockContactStart
 } from '../../store/actions/actions';
-import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { MatMenuTrigger } from '@angular/material/menu';
-import { Store } from '@ngrx/store';
+import { Contact } from '../../contact-types';
+import {
+	BlockContactStartPayload, UnblockContactStartPayload
+} from '../../store/payload-types';
 
 @Component({
 	selector: 'contact',
@@ -50,37 +54,46 @@ export class ContactComponent implements OnInit, OnDestroy {
 	public blockContact(event: Event): void {
 		event.preventDefault();
 		event.stopPropagation();
+		const blockContactStartPayload = this.getBlockContactStartPayload();
+		this.store.dispatch(blockContactStart(blockContactStartPayload));
 		this.store.dispatch(blockContactProgress());
-		this.store.dispatch(
-			blockContactStart({
-				loggedInEmail: this.loggedInEmail,
-				email: this.contact.email
-			})
-		);
 		this.matMenuTrigger.closeMenu();
+	}
+
+	private getBlockContactStartPayload(): BlockContactStartPayload {
+		return {
+			loggedInEmail: this.loggedInEmail,
+			email: this.contact.email
+		};
 	}
 
 	public unblockContact(event: Event): void {
 		event.preventDefault();
 		event.stopPropagation();
+		const unblockContactStartPayload = this.getUnblockContactStartPayload();
+		this.store.dispatch(unblockContactStart(unblockContactStartPayload));
 		this.store.dispatch(unblockContactProgress());
-		this.store.dispatch(
-			unblockContactStart({
-				blockChatId: this.contact.blockChatId,
-				loggedInEmail: this.loggedInEmail
-			})
-		);
 		this.matMenuTrigger.closeMenu();
 	}
 
+	private getUnblockContactStartPayload(): UnblockContactStartPayload {
+		return {
+			blockChatId: this.contact.blockChatId,
+			loggedInEmail: this.loggedInEmail
+		};
+	}
+
 	public openContactChat(senderEmail: string): void {
-		this.store.dispatch(
-			loadChatStart({
-				senderEmail,
-				recipientEmail: this.loggedInEmail
-			})
-		);
+		const loadChatStartPayload = this.getLoadChatStartPayload(senderEmail);
+		this.store.dispatch(loadChatStart(loadChatStartPayload));
 		this.store.dispatch(loadChatProgress());
+	}
+
+	private getLoadChatStartPayload(senderEmail: string): LoadChatStartPayload {
+		return {
+			senderEmail,
+			recipientEmail: this.loggedInEmail
+		};
 	}
 
 	public ngOnDestroy(): void {

@@ -1,9 +1,9 @@
+import { createAction, props } from '@ngrx/store';
 import {
 	ContactPayload, LoginFailurePayload, LoginPayload, LoginSuccessPayload,
-	RegisterFailurePayload, RegisterPayload
+	RegisterFailurePayload, RegisterStartPayload
 } from '../payload-types';
 import * as actionTypes from './action-types';
-import { createAction, props } from '@ngrx/store';
 
 export const checkLoginStatus = createAction(actionTypes.CHECK_LOGIN_STATUS);
 export const loginStart = createAction(
@@ -37,7 +37,7 @@ export const googleLoginFailure = createAction(
 
 export const registerStart = createAction(
 	actionTypes.REGISTER_START,
-	props<RegisterPayload>()
+	props<RegisterStartPayload>()
 );
 export const registerEnd = createAction(actionTypes.REGISTER_END);
 export const registerProgress = createAction(actionTypes.REGISTER_PROGRESS);

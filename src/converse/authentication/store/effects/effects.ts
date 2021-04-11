@@ -1,21 +1,21 @@
 import { from, of } from 'rxjs';
 import { catchError, mergeMap, switchMap } from 'rxjs/operators';
+import { Injectable } from '@angular/core';
+import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { reinitChatState } from 'src/converse/chat/store/actions/actions';
 import {
 	reinitContactState
 } from 'src/converse/contacts/store/actions/actions';
 import { reinitNavState } from 'src/converse/nav/store/actions/actions';
-import { User } from '../../auth-types';
-import * as actionTypes from '../actions/action-types';
+import { AuthenticationService } from '../../services/authentication.service';
+import { ContactSaverService } from '../../services/contact-saver.service';
 import {
 	googleLoginEnd, googleLoginFailure, loginEnd, loginFailure, logOutSuccess,
 	registerEnd, registerFailure
 } from '../actions/actions';
+import { User } from '../../auth-types';
+import * as actionTypes from '../actions/action-types';
 import { ContactPayload } from '../payload-types';
-import { Injectable } from '@angular/core';
-import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { AuthenticationService } from '../../services/authentication.service';
-import { ContactSaverService } from '../../services/contact-saver.service';
 
 @Injectable()
 export class AuthenticationEffects {

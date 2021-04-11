@@ -1,6 +1,6 @@
-import { checkLoginStatus } from './authentication/store/actions/actions';
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
+import { checkLoginStatus } from './authentication/store/actions/actions';
 
 @Component({
 	selector: 'converse',

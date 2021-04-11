@@ -1,17 +1,17 @@
-import { Subscription } from 'rxjs';
-import {
-	googleLoginProgress, googleLoginStart, loginProgress, loginStart
-} from '../store/actions/actions';
-import {
-	isLoggingInProcessProgress, isLoggingInProgress, isLoginFailure,
-	isLoginSuccess
-} from '../store/selectors/selectors';
+import { Observable, Subscription } from 'rxjs';
 import {
 	Component, EventEmitter, OnDestroy, OnInit, Output
 } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
+import {
+	googleLoginProgress, googleLoginStart, loginProgress, loginStart
+} from '../../store/actions/actions';
+import {
+	isLoggingInProcessProgress, isLoggingInProgress, isLoginFailure,
+	isLoginSuccess
+} from '../../store/selectors/selectors';
 
 @Component({
 	selector: 'login',
@@ -22,14 +22,17 @@ export class LoginComponent implements OnInit, OnDestroy {
 	@Output() public tabChange: EventEmitter<void> = new EventEmitter();
 	public loginForm: FormGroup;
 	public isLoginButtonDisabled: boolean;
-	public isLoginProgress: boolean;
+	public loggingInProgressSource: Observable<boolean>;
 	public formError: string;
 	private loginSuccessSubscription: Subscription;
 	private loginFailureSubscription: Subscription;
-	private loggingInProgressSubscription: Subscription;
 	private loggingInProcessProgressSubscription: Subscription;
 
 	constructor(private store: Store, private router: Router) {
+		this.initializeLoginForm();
+	}
+
+	private initializeLoginForm(): void {
 		this.loginForm = new FormGroup({
 			email: new FormControl('', [Validators.required, Validators.email]),
 			password: new FormControl('', [Validators.required])
@@ -39,7 +42,7 @@ export class LoginComponent implements OnInit, OnDestroy {
 	public ngOnInit(): void {
 		this.initializeLoggingInProcessProgressSubscription();
 		this.initializeLoginFailureSubscription();
-		this.initializeLoggingInProgressSubscription();
+		this.initializeLoggingInProgressSource();
 		this.initializeLoginSuccessSubscription();
 	}
 
@@ -48,47 +51,55 @@ export class LoginComponent implements OnInit, OnDestroy {
 			.select(isLoggingInProcessProgress)
 			.subscribe((isLoginProcessProgress: boolean) => {
 				if (isLoginProcessProgress) {
-					this.loginForm.controls.email.disable();
-					this.loginForm.controls.password.disable();
+					this.disableLoginFormControls();
 				} else {
-					this.loginForm.controls.email.enable();
-					this.loginForm.controls.password.enable();
+					this.enableLoginFormControls();
 				}
 				this.isLoginButtonDisabled = isLoginProcessProgress;
 			});
 	}
 
-	private initializeLoggingInProgressSubscription(): void {
-		this.loggingInProgressSubscription = this.store
-			.select(isLoggingInProgress)
-			.subscribe((isLoginProgress: boolean) => {
-				this.isLoginProgress = isLoginProgress;
-			});
+	private disableLoginFormControls(): void {
+		this.loginForm.controls.email.disable();
+		this.loginForm.controls.password.disable();
+	}
+
+	private enableLoginFormControls(): void {
+		this.loginForm.controls.email.enable();
+		this.loginForm.controls.password.enable();
 	}
 
 	private initializeLoginFailureSubscription(): void {
 		this.loginFailureSubscription = this.store
 			.select(isLoginFailure)
-			.subscribe((loginError: string) => {
-				if (loginError === 'email-not-verified') {
-					this.formError = '*Please verify your email';
-				} else if (
-					loginError ===
-					'The password is invalid or the user does not have a password.'
-				) {
-					this.formError = 'Invalid email or password';
-				} else if (
-					loginError ===
-					'There is no user record corresponding to this identifier. The user may have been deleted.'
-				) {
-					this.formError =
-						'Account with this email do not exists. Try registering.';
-				} else if (loginError === 'User not logged in') {
-					this.formError = '';
-				} else {
-					this.formError = 'Unknown error';
-				}
-			});
+			.subscribe((loginError: string) =>
+				this.handleLoginError(loginError)
+			);
+	}
+
+	private handleLoginError(error: string): void {
+		if (error === 'email-not-verified') {
+			this.formError = '*Please verify your email';
+		} else if (
+			error ===
+			'The password is invalid or the user does not have a password.'
+		) {
+			this.formError = 'Invalid email or password';
+		} else if (
+			error ===
+			'There is no user record corresponding to this identifier. The user may have been deleted.'
+		) {
+			this.formError =
+				'Account with this email do not exists. Try registering.';
+		} else if (error === 'User not logged in') {
+			this.formError = '';
+		} else {
+			this.formError = 'Unknown error';
+		}
+	}
+
+	private initializeLoggingInProgressSource(): void {
+		this.loggingInProgressSource = this.store.select(isLoggingInProgress);
 	}
 
 	private initializeLoginSuccessSubscription(): void {
@@ -103,16 +114,15 @@ export class LoginComponent implements OnInit, OnDestroy {
 
 	public login(event: Event): void {
 		event.preventDefault();
-		this.store.dispatch(
-			loginStart({
-				email: this.loginForm.controls.email.value,
-				password: this.loginForm.controls.password.value
-			})
-		);
+		const loginStartPayload = {
+			email: this.loginForm.controls.email.value,
+			password: this.loginForm.controls.password.value
+		};
+		this.store.dispatch(loginStart(loginStartPayload));
 		this.store.dispatch(loginProgress());
 	}
 
-	public loginWithGoogle(event): void {
+	public loginWithGoogle(event: Event): void {
 		event.preventDefault();
 		this.store.dispatch(googleLoginStart());
 		this.store.dispatch(googleLoginProgress());
@@ -124,7 +134,6 @@ export class LoginComponent implements OnInit, OnDestroy {
 
 	public ngOnDestroy(): void {
 		this.loggingInProcessProgressSubscription.unsubscribe();
-		this.loggingInProgressSubscription.unsubscribe();
 		this.loginFailureSubscription.unsubscribe();
 		this.loginSuccessSubscription.unsubscribe();
 	}

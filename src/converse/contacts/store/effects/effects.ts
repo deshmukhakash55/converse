@@ -1,13 +1,5 @@
 import { from } from 'rxjs';
 import { catchError, mergeMap, switchMap } from 'rxjs/operators';
-import { LOAD_CHAT_START } from '../../../chat/store/actions/action-types';
-import { Contact } from '../../contact-types';
-import * as actionTypes from '../actions/action-types';
-import {
-	blockContactEnd, blockContactFailure, loadContactsEnd, loadContactsFailure,
-	loadSingleContactEnd, loadSingleContactFailure, unblockContactEnd,
-	unblockContactFailure
-} from '../actions/actions';
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { ContactBlockService } from '../../services/contact-block.service';
@@ -15,6 +7,14 @@ import { ContactsLoaderService } from '../../services/contacts-loader.service';
 import {
 	SingleContactLoaderService
 } from '../../services/single-contact-loader.service';
+import {
+	blockContactEnd, blockContactFailure, loadContactsEnd, loadContactsFailure,
+	loadSingleContactEnd, loadSingleContactFailure, unblockContactEnd,
+	unblockContactFailure
+} from '../actions/actions';
+import { LOAD_CHAT_START } from '../../../chat/store/actions/action-types';
+import { Contact } from '../../contact-types';
+import * as actionTypes from '../actions/action-types';
 
 @Injectable()
 export class ContactEffects {

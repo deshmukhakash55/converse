@@ -1,8 +1,8 @@
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { BLOCK_COLLECTION } from 'src/converse/contacts/contact-constants';
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
+import { BLOCK_COLLECTION } from 'src/converse/contacts/contact-constants';
 
 type BlockEntity = {
 	id: string;

@@ -1,4 +1,4 @@
-import { ChatStoreState } from '../../chat-types';
+import { createReducer, on } from '@ngrx/store';
 import {
 	addProfileImageEnd, addProfileImageFailure, addProfileImageProgress,
 	addProfileImageSuccess, deleteProfileImageEnd, deleteProfileImageFailure,
@@ -6,11 +6,11 @@ import {
 	loadChatFailure, loadChatProgress, loadChatSuccess, reinitChatState,
 	sendMessageEnd, sendMessageFailure, sendMessageProgress, sendMessageSuccess
 } from '../actions/actions';
+import { ChatStoreState } from '../../chat-types';
 import {
 	AddProfileImageFailurePayload, DeleteProfileImageFailurePayload,
 	LoadChatFailurePayload, LoadChatSuccessPayload, SendMessageFailurePayload
 } from '../payload-types';
-import { createReducer, on } from '@ngrx/store';
 
 const initialState: ChatStoreState = {
 	chats: [],

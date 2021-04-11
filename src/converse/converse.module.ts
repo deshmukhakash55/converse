@@ -10,6 +10,10 @@ import { AuthenticationModule } from './authentication/authentication.module';
 import { ConverseRoutingModule } from './converse-routing.module';
 import { ConverseComponent } from './converse.component';
 
+const storeDevToolsModuleIfInDevelopment = !environment.production
+	? StoreDevtoolsModule.instrument({ maxAge: 100 })
+	: [];
+
 @NgModule({
 	declarations: [ConverseComponent],
 	imports: [
@@ -19,9 +23,7 @@ import { ConverseComponent } from './converse.component';
 		AuthenticationModule,
 		AngularFireModule.initializeApp(firebaseConfig),
 		StoreModule.forRoot({}),
-		!environment.production
-			? StoreDevtoolsModule.instrument({ maxAge: 100 })
-			: [],
+		storeDevToolsModuleIfInDevelopment,
 		EffectsModule.forRoot([])
 	],
 	providers: [],

@@ -1,7 +1,7 @@
-import { selectedSender } from 'src/converse/chat/store/selectors/selectors';
-import { ContactStoreKey } from '../../contact-constants';
-import { Contact, ContactStoreState } from '../../contact-types';
 import { createSelector } from '@ngrx/store';
+import { selectedSender } from 'src/converse/chat/store/selectors/selectors';
+import { Contact, ContactStoreState } from '../../contact-types';
+import { ContactStoreKey } from '../../contact-constants';
 
 const contactStateSelector = (state) => state[ContactStoreKey];
 

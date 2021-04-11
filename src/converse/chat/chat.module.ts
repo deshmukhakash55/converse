@@ -1,7 +1,4 @@
 import { NgxEmojiPickerModule } from 'ngx-emoji-picker';
-import { ChatStoreKey } from './chat-constants';
-import { ChatEffects } from './store/effects/effects';
-import { reducer } from './store/reducers/reducers';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
@@ -50,6 +47,9 @@ import { ChatSaverService } from './services/chat-saver.service';
 import {
 	ContactProfileImageService
 } from './services/contact-profile-image.service';
+import { ChatEffects } from './store/effects/effects';
+import { reducer } from './store/reducers/reducers';
+import { ChatStoreKey } from './chat-constants';
 
 const routes = [
 	{

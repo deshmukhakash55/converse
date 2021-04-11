@@ -1,6 +1,3 @@
-import { NavStoreKey } from './nav-constants';
-import { NavEffects } from './store/effects/effects';
-import { reducer } from './store/reducers/reducers';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { AngularFireModule } from '@angular/fire';
@@ -21,6 +18,9 @@ import {
 	NavSearchInputComponent
 } from './components/nav-search-input/nav-search-input.component';
 import { ContactSearchService } from './services/contact-search.service';
+import { NavEffects } from './store/effects/effects';
+import { reducer } from './store/reducers/reducers';
+import { NavStoreKey } from './nav-constants';
 
 @NgModule({
 	declarations: [NavBarComponent, NavSearchInputComponent],

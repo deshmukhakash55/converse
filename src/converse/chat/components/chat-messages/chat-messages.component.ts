@@ -1,16 +1,16 @@
 import { Observable, Subscription } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
-import { User } from 'src/converse/authentication/auth-types';
-import {
-	loggedInUser
-} from 'src/converse/authentication/store/selectors/selectors';
-import { Chat, ChatType } from '../../chat-types';
-import { chats, isSendMessageSuccess } from '../../store/selectors/selectors';
 import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 import {
 	AfterViewInit, Component, OnDestroy, OnInit, ViewChild
 } from '@angular/core';
 import { Store } from '@ngrx/store';
+import {
+	loggedInUser
+} from 'src/converse/authentication/store/selectors/selectors';
+import { User } from 'src/converse/authentication/auth-types';
+import { chats, isSendMessageSuccess } from '../../store/selectors/selectors';
+import { Chat, ChatType } from '../../chat-types';
 
 @Component({
 	selector: 'chat-messages',
@@ -38,12 +38,16 @@ export class ChatMessagesComponent implements OnInit, AfterViewInit, OnDestroy {
 			.subscribe((user: User) => {
 				if (user) {
 					this.loggedInUser = user;
-					this.chatsSource = this.store.select(chats).pipe(
-						map((chatList: Chat[]) => [...chatList]),
-						tap(() => this.scrollMessagesWindowToBottom())
-					);
+					this.initializeChatSource();
 				}
 			});
+	}
+
+	private initializeChatSource(): void {
+		this.chatsSource = this.store.select(chats).pipe(
+			map((chatList: Chat[]) => [...chatList]),
+			tap(() => this.scrollMessagesWindowToBottom())
+		);
 	}
 
 	private initializeSendMessageSuccessSubscription(): void {

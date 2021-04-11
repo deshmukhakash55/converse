@@ -1,14 +1,14 @@
 import { combineLatest, Observable, of } from 'rxjs';
 import { mergeMap } from 'rxjs/operators';
+import { Component, OnInit } from '@angular/core';
+import { Store } from '@ngrx/store';
 import {
 	isLoadContactsProgress
 } from 'src/converse/contacts/store/selectors/selectors';
-import { Chat } from '../../chat-types';
 import {
 	chats, isLoadChatProgress, isSendMessageProgress, selectedSender
 } from '../../store/selectors/selectors';
-import { Component, OnInit } from '@angular/core';
-import { Store } from '@ngrx/store';
+import { Chat } from '../../chat-types';
 
 @Component({
 	selector: 'chat-window',
@@ -16,9 +16,9 @@ import { Store } from '@ngrx/store';
 	styleUrls: ['./chat-window.component.scss']
 })
 export class ChatWindowComponent implements OnInit {
+	public loaderObservable: Observable<boolean>;
 	private loadChatProgressSource: Observable<boolean>;
 	private chatsSource: Observable<Chat[]>;
-	public loaderObservable: Observable<boolean>;
 	private isSendMessageProgressSource: Observable<boolean>;
 	private selectedSenderSource: Observable<string>;
 	private isLoadContactsProgressSource: Observable<boolean>;

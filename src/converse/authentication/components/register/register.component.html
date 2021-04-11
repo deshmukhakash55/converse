@@ -119,7 +119,7 @@
 			[disabled]="isSignupButtonDisabled || signupForm.invalid"
 		>
 			<img
-				*ngIf="isRegisterProgress; else signupTmp"
+				*ngIf="registerProgressSource | ngrxPush; else signupTmp"
 				src="../../../../assets/loading.gif"
 				width="30px"
 			/>

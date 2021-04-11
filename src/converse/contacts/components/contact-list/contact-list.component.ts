@@ -1,21 +1,22 @@
 import { combineLatest, Observable, Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
-import {
-	loggedInUser
-} from 'src/converse/authentication/store/selectors/selectors';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Store } from '@ngrx/store';
 import {
 	loadChatProgress, loadChatStart
 } from 'src/converse/chat/store/actions/actions';
+import {
+	loggedInUser
+} from 'src/converse/authentication/store/selectors/selectors';
 import { selectedSender } from 'src/converse/chat/store/selectors/selectors';
-import { Contact } from '../../contact-types';
+import { LoadChatStartPayload } from 'src/converse/chat/store/payload-types';
 import {
 	loadContactsProgress, loadContactsStart
 } from '../../store/actions/actions';
 import {
 	contacts, isLoadContactsProgress, isLoadSingleContactProgress
 } from '../../store/selectors/selectors';
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { Store } from '@ngrx/store';
+import { Contact } from '../../contact-types';
 
 @Component({
 	selector: 'contact-list',
@@ -85,14 +86,23 @@ export class ContactListComponent implements OnInit, OnDestroy {
 					: this.contacts.length > 0
 					? this.contacts[0].email
 					: '';
-				this.store.dispatch(loadChatProgress());
-				this.store.dispatch(
-					loadChatStart({
-						senderEmail,
-						recipientEmail: email
-					})
+				const loadChatStartPayload = this.getLoadChatStartPayload(
+					senderEmail,
+					email
 				);
+				this.store.dispatch(loadChatProgress());
+				this.store.dispatch(loadChatStart(loadChatStartPayload));
 			});
+	}
+
+	private getLoadChatStartPayload(
+		senderEmail: string,
+		recipientEmail: string
+	): LoadChatStartPayload {
+		return {
+			senderEmail,
+			recipientEmail
+		};
 	}
 
 	private initializeSelectedSenderSubscription(): void {

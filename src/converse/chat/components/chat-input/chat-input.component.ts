@@ -1,8 +1,10 @@
 import { Observable, Subscription } from 'rxjs';
-import { User } from 'src/converse/authentication/auth-types';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Store } from '@ngrx/store';
 import {
 	loggedInUser
 } from 'src/converse/authentication/store/selectors/selectors';
+import { User } from 'src/converse/authentication/auth-types';
 import {
 	sendMessageProgress, sendMessageStart
 } from '../../store/actions/actions';
@@ -10,8 +12,7 @@ import {
 	currentBlockConversationId, isSendMessageProgress, isSendMessageSuccess,
 	selectedSender
 } from '../../store/selectors/selectors';
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Store } from '@ngrx/store';
+import { SendMessageStartPayload } from '../../store/payload-types';
 
 @Component({
 	selector: 'chat-input',
@@ -74,14 +75,17 @@ export class ChatInputComponent implements OnInit, OnDestroy {
 
 	public sendMessage(event: Event): void {
 		event.preventDefault();
+		const sendMessageStartPayload = this.getSendMessageStartPayload();
+		this.store.dispatch(sendMessageStart(sendMessageStartPayload));
 		this.store.dispatch(sendMessageProgress());
-		this.store.dispatch(
-			sendMessageStart({
-				from: this.loggedInUser.email,
-				to: this.selectedSender,
-				message: this.message
-			})
-		);
+	}
+
+	private getSendMessageStartPayload(): SendMessageStartPayload {
+		return {
+			from: this.loggedInUser.email,
+			to: this.selectedSender,
+			message: this.message
+		};
 	}
 
 	public handleSelection(event: { char: string }): void {

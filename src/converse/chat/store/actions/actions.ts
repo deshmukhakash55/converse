@@ -1,3 +1,4 @@
+import { createAction, props } from '@ngrx/store';
 import {
 	AddProfileImageFailurePayload, AddProfileImageStartPayload,
 	AddProfileImageSuccessPayload, DeleteProfileImageFailurePayload,
@@ -6,7 +7,6 @@ import {
 	SendMessageStartPayload
 } from '../payload-types';
 import * as actionTypes from './action-types';
-import { createAction, props } from '@ngrx/store';
 
 export const loadChatStart = createAction(
 	actionTypes.LOAD_CHAT_START,

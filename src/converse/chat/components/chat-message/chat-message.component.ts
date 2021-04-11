@@ -1,19 +1,19 @@
 import { Observable, Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { User } from 'src/converse/authentication/auth-types';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Store } from '@ngrx/store';
 import {
 	loggedInUser
 } from 'src/converse/authentication/store/selectors/selectors';
 import {
 	selectedSenderName
 } from 'src/converse/contacts/store/selectors/selectors';
+import { User } from 'src/converse/authentication/auth-types';
 import { defaultProfileImagePath } from 'src/converse/converse-constants';
-import { Chat, ChatType } from '../../chat-types';
 import {
 	contactProfileImagePath, loggedInUserProfileImagePath
 } from '../../store/selectors/selectors';
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { Store } from '@ngrx/store';
+import { Chat, ChatType } from '../../chat-types';
 
 @Component({
 	selector: 'chat-message',
@@ -40,18 +40,19 @@ export class ChatMessageComponent implements OnInit, OnDestroy {
 	private initializeProfileImagePathSubscription(): void {
 		this.profileImagePathSubscription = this.store
 			.select(loggedInUser)
-			.subscribe(({ email }) => {
-				if (email === this.chat.from) {
-					this.profileImagePath = this.store.select(
-						loggedInUserProfileImagePath
-					);
-				} else {
-					this.profileImagePath = this.store.select(
-						contactProfileImagePath,
-						{ email: this.chat.from }
-					);
-				}
+			.subscribe(({ email }) => this.setProfileImagePathBy(email));
+	}
+
+	private setProfileImagePathBy(email: string): void {
+		if (email === this.chat.from) {
+			this.profileImagePath = this.store.select(
+				loggedInUserProfileImagePath
+			);
+		} else {
+			this.profileImagePath = this.store.select(contactProfileImagePath, {
+				email: this.chat.from
 			});
+		}
 	}
 
 	private initializeLoggedInUserNameSource(): void {

@@ -1,17 +1,17 @@
 import { Observable, Subscription } from 'rxjs';
-import { Chat } from 'src/converse/chat/chat-types';
+import { Component, DoCheck, Input, OnDestroy, OnInit } from '@angular/core';
+import { MatDrawer } from '@angular/material/sidenav';
+import { Router } from '@angular/router';
+import { Store } from '@ngrx/store';
 import {
 	chats, loggedInUserProfileImagePath
 } from 'src/converse/chat/store/selectors/selectors';
+import { Chat } from 'src/converse/chat/chat-types';
 import { defaultProfileImagePath } from 'src/converse/converse-constants';
 import { logOut } from '../../../authentication/store/actions/actions';
 import {
 	isLogoutSuccess
 } from '../../../authentication/store/selectors/selectors';
-import { Component, DoCheck, Input, OnDestroy, OnInit } from '@angular/core';
-import { MatDrawer } from '@angular/material/sidenav';
-import { Router } from '@angular/router';
-import { Store } from '@ngrx/store';
 
 @Component({
 	selector: 'nav-bar',

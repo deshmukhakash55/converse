@@ -1,5 +1,7 @@
 # Converse
 
+Converse is one-to-one chat platform made using Angular, Angular Material, NGRX and Firebase
+
 ## Landing Page
 
 ![image](https://firebasestorage.googleapis.com/v0/b/converse-8ebf5.appspot.com/o/landing.png?alt=media&token=938be4db-8b51-4f41-aaed-4fd179f229fc)

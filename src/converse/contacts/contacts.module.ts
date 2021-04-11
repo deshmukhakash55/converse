@@ -1,6 +1,3 @@
-import { ContactStoreKey } from './contact-constants';
-import { ContactEffects } from './store/effects/effects';
-import { reducer } from './store/reducers/reducers';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
@@ -26,6 +23,9 @@ import {
 	SingleContactLoaderService
 } from './services/single-contact-loader.service';
 import { HumanizePipe } from './pipes/humanize.pipe';
+import { ContactEffects } from './store/effects/effects';
+import { reducer } from './store/reducers/reducers';
+import { ContactStoreKey } from './contact-constants';
 
 @NgModule({
 	declarations: [

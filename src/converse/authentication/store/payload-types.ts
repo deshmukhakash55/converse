@@ -14,7 +14,7 @@ export type LoginFailurePayload = {
 	reason: string;
 };
 
-export type RegisterPayload = {
+export type RegisterStartPayload = {
 	name: string;
 	email: string;
 	password: string;

@@ -1,13 +1,5 @@
 import { from } from 'rxjs';
 import { catchError, map, mergeMap, switchMap } from 'rxjs/operators';
-import { Chat } from '../../chat-types';
-import * as actionTypes from '../actions/action-types';
-import {
-	addProfileImageEnd, addProfileImageFailure, deleteProfileImageEnd,
-	deleteProfileImageFailure, loadChatEnd, loadChatFailure, sendMessageEnd,
-	sendMessageFailure
-} from '../actions/actions';
-import { SendMessageStartPayload } from '../payload-types';
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import {
@@ -18,6 +10,14 @@ import { ChatSaverService } from '../../services/chat-saver.service';
 import {
 	ContactProfileImageService
 } from '../../services/contact-profile-image.service';
+import {
+	addProfileImageEnd, addProfileImageFailure, deleteProfileImageEnd,
+	deleteProfileImageFailure, loadChatEnd, loadChatFailure, sendMessageEnd,
+	sendMessageFailure
+} from '../actions/actions';
+import { Chat } from '../../chat-types';
+import * as actionTypes from '../actions/action-types';
+import { SendMessageStartPayload } from '../payload-types';
 
 @Injectable()
 export class ChatEffects {

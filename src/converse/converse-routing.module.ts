@@ -3,7 +3,9 @@ import { map } from 'rxjs/operators';
 import { NgModule } from '@angular/core';
 import { AngularFireAuthGuard, emailVerified } from '@angular/fire/auth-guard';
 import { RouterModule, Routes } from '@angular/router';
-import { LandingComponent } from './authentication/landing/landing.component';
+import {
+	LandingComponent
+} from './authentication/components/landing/landing.component';
 
 const redirectUnauthorizeTo = (redirect) =>
 	pipe(

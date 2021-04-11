@@ -1,3 +1,4 @@
+import { createAction, props } from '@ngrx/store';
 import {
 	BlockContactFailurePayload, BlockContactStartPayload,
 	LoadedContactsFailurePayload, LoadedContactsStartPayload,
@@ -6,7 +7,6 @@ import {
 	UnblockContactFailurePayload, UnblockContactStartPayload
 } from '../payload-types';
 import * as actionTypes from './action-types';
-import { createAction, props } from '@ngrx/store';
 
 export const loadContactsStart = createAction(
 	actionTypes.LOAD_CONTACTS_START,

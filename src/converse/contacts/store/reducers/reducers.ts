@@ -1,4 +1,4 @@
-import { ContactStoreState } from '../../contact-types';
+import { createReducer, on } from '@ngrx/store';
 import {
 	blockContactEnd, blockContactFailure, blockContactProgress,
 	blockContactSuccess, loadContactsEnd, loadContactsFailure,
@@ -7,12 +7,12 @@ import {
 	loadSingleContactSuccess, reinitContactState, unblockContactEnd,
 	unblockContactFailure, unblockContactProgress, unblockContactSuccess
 } from '../actions/actions';
+import { ContactStoreState } from '../../contact-types';
 import {
 	BlockContactFailurePayload, LoadedContactsFailurePayload,
 	LoadedContactsSuccessPayload, LoadSingleContactSuccessPayload,
 	UnblockContactFailurePayload
 } from '../payload-types';
-import { createReducer, on } from '@ngrx/store';
 
 const initialState: ContactStoreState = {
 	contacts: [],

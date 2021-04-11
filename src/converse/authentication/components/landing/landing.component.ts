@@ -1,9 +1,8 @@
 import { Subject, Subscription } from 'rxjs';
-import { takeLast } from 'rxjs/operators';
-import { isLoginSuccess } from '../store/selectors/selectors';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
+import { isLoginSuccess } from '../../store/selectors/selectors';
 
 @Component({
 	selector: 'landing',

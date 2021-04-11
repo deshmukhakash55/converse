@@ -1,12 +1,12 @@
-import { NavStoreState } from '../../nav-types';
+import { createReducer, on } from '@ngrx/store';
 import {
 	reinitNavState, searchContactsEnd, searchContactsFailure,
 	searchContactsProgress, searchContactsSuccess
 } from '../actions/actions';
+import { NavStoreState } from '../../nav-types';
 import {
 	SearchContactsFailurePayload, SearchContactsSuccessPayload
 } from '../payload-types';
-import { createReducer, on } from '@ngrx/store';
 
 const initialState: NavStoreState = {
 	searchContacts: [],

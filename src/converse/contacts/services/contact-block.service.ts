@@ -1,8 +1,8 @@
 import firebase from 'firebase/app';
 import { from, Observable, of } from 'rxjs';
-import { BLOCK_COLLECTION } from '../contact-constants';
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
+import { BLOCK_COLLECTION } from '../contact-constants';
 
 @Injectable()
 export class ContactBlockService {

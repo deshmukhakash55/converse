@@ -1,11 +1,16 @@
 import firebase from 'firebase/app';
 import { from, Observable, of } from 'rxjs';
 import { map, mergeMap } from 'rxjs/operators';
-import { CONTACT_COLLECTION } from 'src/converse/contacts/contact-constants';
-import { User } from '../auth-types';
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFirestore } from '@angular/fire/firestore';
+import { CONTACT_COLLECTION } from 'src/converse/contacts/contact-constants';
+import { User } from '../auth-types';
+
+type ContactProfileImagePathAndName = {
+	profileImagePath: string;
+	name: string;
+};
 
 @Injectable()
 export class AuthenticationService {
@@ -14,7 +19,7 @@ export class AuthenticationService {
 		private angularFirestore: AngularFirestore
 	) {}
 
-	public loginWith(email: string, password: string): Observable<any | User> {
+	public loginWith(email: string, password: string): Observable<User> {
 		return from(
 			this.signInWithEmailAndPasswordAndCheckIfEmailVerified(
 				email,
@@ -22,37 +27,33 @@ export class AuthenticationService {
 			)
 		).pipe(
 			mergeMap((userCredentials: firebase.auth.UserCredential) => {
-				return this.angularFirestore
-					.collection<{ profileImagePath }>(
-						CONTACT_COLLECTION,
-						(ref) =>
-							ref
-								.where(
-									'email',
-									'==',
-									userCredentials.user.email
-								)
-								.limit(1)
-					)
-					.valueChanges()
-					.pipe(
-						map(
-							(
-								contactEntities: { profileImagePath: string }[]
-							) => {
-								const user = userCredentials.user;
-								return {
-									id: user.uid,
-									email: user.email,
-									name: user.displayName,
-									profileImagePath:
-										contactEntities[0].profileImagePath
-								};
-							}
-						)
-					);
+				return this.getProfileImagePathFor(
+					userCredentials.user.email
+				).pipe(
+					map((contactEntities: ContactProfileImagePathAndName[]) => {
+						const user = userCredentials.user;
+						return {
+							id: user.uid,
+							email: user.email,
+							name: user.displayName,
+							profileImagePath:
+								contactEntities[0].profileImagePath
+						};
+					})
+				);
 			})
 		);
+	}
+
+	private getProfileImagePathFor(
+		email: string
+	): Observable<ContactProfileImagePathAndName[]> {
+		return this.angularFirestore
+			.collection<ContactProfileImagePathAndName>(
+				CONTACT_COLLECTION,
+				(ref) => ref.where('email', '==', email).limit(1)
+			)
+			.valueChanges();
 	}
 
 	private signInWithEmailAndPasswordAndCheckIfEmailVerified(
@@ -78,38 +79,22 @@ export class AuthenticationService {
 	public loginWithGoogle(): Observable<any | User> {
 		return from(this.loginWithGoogleGuarded()).pipe(
 			mergeMap((userCredentials: firebase.auth.UserCredential) => {
-				return this.angularFirestore
-					.collection<{ profileImagePath }>(
-						CONTACT_COLLECTION,
-						(ref) =>
-							ref
-								.where(
-									'email',
-									'==',
-									userCredentials.user.email
-								)
-								.limit(1)
-					)
-					.valueChanges()
-					.pipe(
-						map(
-							(
-								contactEntities: { profileImagePath: string }[]
-							) => {
-								const user = userCredentials.user;
-								return {
-									id: user.uid,
-									email: user.email,
-									name: user.displayName,
-									profileImagePath:
-										contactEntities.length !== 0
-											? contactEntities[0]
-													.profileImagePath
-											: user.photoURL
-								};
-							}
-						)
-					);
+				return this.getProfileImagePathFor(
+					userCredentials.user.email
+				).pipe(
+					map((contactEntities: ContactProfileImagePathAndName[]) => {
+						const user = userCredentials.user;
+						return {
+							id: user.uid,
+							email: user.email,
+							name: user.displayName,
+							profileImagePath:
+								contactEntities.length !== 0
+									? contactEntities[0].profileImagePath
+									: user.photoURL
+						};
+					})
+				);
 			})
 		);
 	}
@@ -149,34 +134,23 @@ export class AuthenticationService {
 							email: userEntity.email,
 							id: userEntity.uid
 						};
-						return this.angularFirestore
-							.collection<{ profileImagePath }>(
-								CONTACT_COLLECTION,
-								(ref) =>
-									ref
-										.where('email', '==', userEntity.email)
-										.limit(1)
+						return this.getProfileImagePathFor(
+							userEntity.email
+						).pipe(
+							map(
+								(
+									contactEntities: ContactProfileImagePathAndName[]
+								) => {
+									return {
+										id: user.id,
+										email: user.email,
+										name: contactEntities[0].name,
+										profileImagePath:
+											contactEntities[0].profileImagePath
+									};
+								}
 							)
-							.valueChanges()
-							.pipe(
-								map(
-									(
-										contactEntities: {
-											profileImagePath: string;
-											name: string;
-										}[]
-									) => {
-										return {
-											id: user.id,
-											email: user.email,
-											name: contactEntities[0].name,
-											profileImagePath:
-												contactEntities[0]
-													.profileImagePath
-										};
-									}
-								)
-							);
+						);
 					} else {
 						return of(null);
 					}

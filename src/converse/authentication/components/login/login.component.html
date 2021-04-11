@@ -65,7 +65,7 @@
 			[disabled]="isLoginButtonDisabled || loginForm.invalid"
 		>
 			<img
-				*ngIf="isLoginProgress; else loginTmp"
+				*ngIf="loggingInProgressSource | ngrxPush; else loginTmp"
 				src="../../../../assets/loading.gif"
 				width="30px"
 			/>

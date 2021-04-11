@@ -1,9 +1,9 @@
 import { from, Observable } from 'rxjs';
 import { first, map, mergeMap } from 'rxjs/operators';
-import { CONTACT_COLLECTION } from 'src/converse/contacts/contact-constants';
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { AngularFireStorage } from '@angular/fire/storage';
+import { CONTACT_COLLECTION } from 'src/converse/contacts/contact-constants';
 
 type ContactEntity = {
 	id: string;
@@ -74,30 +74,40 @@ export class ContactProfileImageService {
 		);
 		return from(task).pipe(
 			mergeMap((_: any) =>
-				this.angularFireStorage
-					.ref(loggedInEmail + fileExtension)
-					.getDownloadURL()
+				this.getDownloadURL(loggedInEmail, fileExtension)
 			),
 			mergeMap((url: string) =>
-				this.angularFirestore
-					.collection(CONTACT_COLLECTION, (ref) =>
-						ref.where('email', '==', loggedInEmail).limit(1)
-					)
-					.valueChanges({ idField: 'id' })
-					.pipe(
-						first(),
-						mergeMap((contactEntities: ContactEntity[]) =>
-							from(
-								this.angularFirestore
-									.collection(CONTACT_COLLECTION)
-									.doc(contactEntities[0].id)
-									.update({
-										profileImagePath: url
-									})
-							)
+				this.getContactEntityBy(loggedInEmail).pipe(
+					first(),
+					mergeMap((contactEntities: ContactEntity[]) =>
+						from(
+							this.angularFirestore
+								.collection(CONTACT_COLLECTION)
+								.doc(contactEntities[0].id)
+								.update({
+									profileImagePath: url
+								})
 						)
 					)
+				)
 			)
 		);
+	}
+
+	private getDownloadURL(
+		loggedInEmail: string,
+		fileExtension: string
+	): Observable<string> {
+		return this.angularFireStorage
+			.ref(loggedInEmail + fileExtension)
+			.getDownloadURL();
+	}
+
+	private getContactEntityBy(email: string): Observable<ContactEntity[]> {
+		return this.angularFirestore
+			.collection<ContactEntity>(CONTACT_COLLECTION, (ref) =>
+				ref.where('email', '==', email).limit(1)
+			)
+			.valueChanges({ idField: 'id' });
 	}
 }

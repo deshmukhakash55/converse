@@ -1,14 +1,14 @@
 import { Subscription } from 'rxjs';
 import {
-	isLoginSuccess
-} from 'src/converse/authentication/store/selectors/selectors';
-import {
 	AfterViewInit, Component, ComponentFactoryResolver, ComponentRef, Injector,
 	OnDestroy, OnInit, ViewChild
 } from '@angular/core';
 import { MatDrawer } from '@angular/material/sidenav';
 import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
 import { Store } from '@ngrx/store';
+import {
+	isLoginSuccess
+} from 'src/converse/authentication/store/selectors/selectors';
 import {
 	ChatDashboardContentComponent
 } from '../chat-dashboard-content/chat-dashboard-content.component';
@@ -26,6 +26,7 @@ export class ChatDashboardComponent
 	@ViewChild(MatDrawer) public sideDrawer: MatDrawer;
 	@ViewChild(RouterOutlet) public routerOutlet: RouterOutlet;
 	private isLoginSuccessSubscription: Subscription;
+
 	constructor(
 		private store: Store,
 		private router: Router,
@@ -35,6 +36,10 @@ export class ChatDashboardComponent
 	) {}
 
 	public ngOnInit(): void {
+		this.initializeIsLoginSuccessSubscription();
+	}
+
+	private initializeIsLoginSuccessSubscription(): void {
 		this.isLoginSuccessSubscription = this.store
 			.select(isLoginSuccess)
 			.subscribe((loginStatus: boolean) => {
@@ -46,22 +51,30 @@ export class ChatDashboardComponent
 
 	public ngAfterViewInit(): void {
 		if (this.router.url === '/chat') {
-			const chatDashboardContentComponentRef = this.createDashboardContentComponent();
-			setTimeout(() =>
-				this.routerOutlet.attach(
-					chatDashboardContentComponentRef,
-					this.activatedRoute
-				)
-			);
+			this.openChatDashboard();
 		} else if (this.router.url === '/settings') {
-			const chatSettingsComponentRef = this.createChatSettingsComponent();
-			setTimeout(() =>
-				this.routerOutlet.attach(
-					chatSettingsComponentRef,
-					this.activatedRoute
-				)
-			);
+			this.openChatSettings();
 		}
+	}
+
+	private openChatDashboard(): void {
+		const chatDashboardContentComponentRef = this.createDashboardContentComponent();
+		setTimeout(() =>
+			this.routerOutlet.attach(
+				chatDashboardContentComponentRef,
+				this.activatedRoute
+			)
+		);
+	}
+
+	private openChatSettings(): void {
+		const chatSettingsComponentRef = this.createChatSettingsComponent();
+		setTimeout(() =>
+			this.routerOutlet.attach(
+				chatSettingsComponentRef,
+				this.activatedRoute
+			)
+		);
 	}
 
 	private createDashboardContentComponent(): ComponentRef<ChatDashboardContentComponent> {

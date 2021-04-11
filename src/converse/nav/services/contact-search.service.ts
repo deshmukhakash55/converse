@@ -1,19 +1,9 @@
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
-import { CONTACT_COLLECTION } from 'src/converse/contacts/contact-constants';
-import { SearchContact } from '../nav-types';
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
-
-type ChatEntity = {
-	from: string;
-	to: string;
-	message: string;
-	date: {
-		seconds: number;
-		nanoseconds: number;
-	};
-};
+import { CONTACT_COLLECTION } from 'src/converse/contacts/contact-constants';
+import { SearchContact } from '../nav-types';
 
 type ContactEntity = {
 	name: string;

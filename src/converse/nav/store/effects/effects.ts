@@ -1,11 +1,11 @@
 import { from } from 'rxjs';
 import { catchError, mergeMap, switchMap } from 'rxjs/operators';
-import { SearchContact } from '../../nav-types';
-import * as actionTypes from '../actions/action-types';
-import { searchContactsEnd, searchContactsFailure } from '../actions/actions';
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { ContactSearchService } from '../../services/contact-search.service';
+import { searchContactsEnd, searchContactsFailure } from '../actions/actions';
+import { SearchContact } from '../../nav-types';
+import * as actionTypes from '../actions/action-types';
 
 @Injectable()
 export class NavEffects {
