@@ -74,7 +74,7 @@ export class ContactListComponent implements OnInit, OnDestroy {
 		this.store
 			.select(loggedInUser)
 			.subscribe(({ email }: { email: string }) => {
-				if (email === this.loggedInUserEmail) {
+				if (!email || email === this.loggedInUserEmail) {
 					return;
 				}
 				this.loggedInUserEmail = email;

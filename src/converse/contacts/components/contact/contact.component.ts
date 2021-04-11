@@ -74,19 +74,13 @@ export class ContactComponent implements OnInit, OnDestroy {
 	}
 
 	public openContactChat(senderEmail: string): void {
-		const subscription = this.store
-			.select(loggedInUser)
-			.subscribe(({ email }: { email: string }) => {
-				this.loggedInEmail = email;
-				this.store.dispatch(
-					loadChatStart({
-						senderEmail,
-						recipientEmail: email
-					})
-				);
-				this.store.dispatch(loadChatProgress());
-				subscription.unsubscribe();
-			});
+		this.store.dispatch(
+			loadChatStart({
+				senderEmail,
+				recipientEmail: this.loggedInEmail
+			})
+		);
+		this.store.dispatch(loadChatProgress());
 	}
 
 	public ngOnDestroy(): void {
