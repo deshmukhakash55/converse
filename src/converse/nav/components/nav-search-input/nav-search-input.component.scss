@@ -8,11 +8,20 @@
 	}
 
 	&__search-input {
+		font: inherit;
 		border: 1px solid #8c8c8c;
 		border-radius: 5px;
 		padding: 0.25em;
 		font-size: 16px;
 		padding-left: 1em;
+		background: transparent;
+		color: currentColor;
+		outline: none;
+		margin: 0;
+		width: 100%;
+		max-width: 100%;
+		vertical-align: bottom;
+		text-align: inherit;
 
 		&:active,
 		&:hover,

@@ -4,9 +4,9 @@ import { MatDrawer } from '@angular/material/sidenav';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import {
-	chats, loggedInUserProfileImagePath
+	loggedInUserProfileImagePath
 } from 'src/converse/chat/store/selectors/selectors';
-import { Chat } from 'src/converse/chat/chat-types';
+
 import { defaultProfileImagePath } from 'src/converse/converse-constants';
 import { logOut } from '../../../authentication/store/actions/actions';
 import {
@@ -47,7 +47,7 @@ export class NavBarComponent implements OnInit, DoCheck, OnDestroy {
 
 	public ngDoCheck(): void {
 		this.initializeMenuOptions();
-		this.initializeShouldShowNavSearchInputSubscription();
+		this.initializeShouldShowNavSearchInput();
 	}
 
 	private initializeMenuOptions(): void {
@@ -55,14 +55,8 @@ export class NavBarComponent implements OnInit, DoCheck, OnDestroy {
 		this.shouldShowHomeMenuOption = this.router.url !== '/chat';
 	}
 
-	private initializeShouldShowNavSearchInputSubscription(): void {
-		this.shouldShowNavSearchInputSubscription = this.store
-			.select(chats)
-			.subscribe(
-				(chatList: Chat[]) =>
-					(this.shouldShowNavSearchInput =
-						chatList.length > 0 && this.router.url === '/chat')
-			);
+	private initializeShouldShowNavSearchInput(): void {
+		this.shouldShowNavSearchInput = this.router.url === '/chat';
 	}
 
 	private loadLoggedInUserProfileImagePath(): void {

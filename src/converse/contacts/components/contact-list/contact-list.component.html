@@ -1,9 +1,6 @@
 <div class="contact-list" [style.height]="listHeight">
 	<ng-container
-		*ngIf="
-			!!contacts && !(isLoadProgressSource | ngrxPush);
-			else loadContactsTemplate
-		"
+		*ngIf="!(isLoadProgressSource | ngrxPush); else loadContactsTemplate"
 	>
 		<ng-container *ngFor="let contact of contacts; let i = index">
 			<div

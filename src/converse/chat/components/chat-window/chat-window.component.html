@@ -10,7 +10,10 @@
 	<div class="chat-window__chat-messages-window">
 		<chat-messages-window></chat-messages-window>
 	</div>
-	<div class="chat-window__chat-input">
+	<div
+		*ngIf="!!(selectedSenderSource | ngrxPush)"
+		class="chat-window__chat-input"
+	>
 		<chat-input class="chat-window__chat-input-component"></chat-input>
 	</div>
 </ng-template>

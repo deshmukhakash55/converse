@@ -1,12 +1,12 @@
-import { combineLatest, Observable } from 'rxjs';
+import { combineLatest, Observable, of } from 'rxjs';
 import { map, mergeMap } from 'rxjs/operators';
-import { CHAT_COLLECTION, CONTACT_COLLECTION } from '../contact-constants';
-import { Contact } from '../contact-types';
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import {
 	ChatBlockLoaderService
 } from 'src/converse/chat/services/chat-block-loader.service';
+import { Contact } from '../contact-types';
+import { CHAT_COLLECTION, CONTACT_COLLECTION } from '../contact-constants';
 
 type ChatEntity = {
 	from: string;
@@ -107,6 +107,9 @@ export class ContactsLoaderService {
 		contacts: string[],
 		loggedInEmail: string
 	): Observable<ChatEntity[]> {
+		if (contacts.length === 0) {
+			return of([]);
+		}
 		return combineLatest(
 			contacts.map((contact: string) =>
 				this.getLatestChatEntityForContact(contact, loggedInEmail)
@@ -163,6 +166,9 @@ export class ContactsLoaderService {
 		contacts: Contact[],
 		loggedInEmail: string
 	): Observable<Contact[]> {
+		if (contacts.length === 0) {
+			return of([]);
+		}
 		return combineLatest(
 			contacts.map((contact: Contact) =>
 				this.updateContactBlockChatId(contact, loggedInEmail)
@@ -174,6 +180,9 @@ export class ContactsLoaderService {
 		chatEntities: ChatEntity[],
 		loggedInEmail: string
 	): Observable<Contact[]> {
+		if (chatEntities.length === 0) {
+			return of([]);
+		}
 		return combineLatest(
 			chatEntities.map((chatEntity: ChatEntity) =>
 				this.mapChatEntityToContact(chatEntity, loggedInEmail)
